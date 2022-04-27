@@ -79,5 +79,20 @@ public class Main {
 
         deck.printAllCards();
         System.out.println(deck.countCards());
+        deck.shuffle();
+        deck.printAllCards();
+
+        Player nr1 = new Player("Hansi");
+        System.out.println(nr1);
+
+        // added dealt Cards to player nr1
+        nr1.addHandCards(deck.dealCards());
+
+        System.out.println(nr1);
+        System.out.println(deck.countCards());
+
+
+        // methode für summe von allen Cards im Spiel
+
     }
 }

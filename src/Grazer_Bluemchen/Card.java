@@ -4,6 +4,7 @@ public class Card {
     public String color;
     public int value;
     public String name;
+    public int points;
     // name is combination of color + value (z.B: R3)
 
 
@@ -12,18 +13,21 @@ public class Card {
         this.color = color;
         this.value = value;
         name = color + Integer.toString(value);
+        points = value;
     }
 
     // ActionCard
     public Card(String color, String name) {
         this.color = color;
         this.name = color + name;
+        points = 20;
 
     }
 
     // SpecialCard
     public Card(String name) {
         this.name = name;
+        points = 50;
     }
 
     @Override
