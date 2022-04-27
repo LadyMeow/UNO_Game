@@ -24,7 +24,12 @@ public class CardDeck {
     public void printAllCards() {
         for (Card c : deck) {
             System.out.print(c.name + " ");
+            System.out.println();
         }
+    }
+
+    public int countCards() {
+        return deck.size();
     }
 
     @Override
