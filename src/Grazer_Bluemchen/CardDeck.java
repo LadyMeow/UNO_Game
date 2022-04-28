@@ -14,7 +14,7 @@ public class CardDeck {
         deck.add(c);
     }
 
-    // drawpile
+    // drawpile = CardDeck
     // discardpile
 
     // shuffle method
