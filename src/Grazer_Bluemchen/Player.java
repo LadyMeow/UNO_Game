@@ -7,8 +7,7 @@ public class Player {
     public int order; // 1-4 - equals number of player
     public ArrayList<Card> handCards;
 
-    public Player(String name) {
-        this.name = name;
+    public Player() {
         order++;
         handCards = new ArrayList<>();
     }
