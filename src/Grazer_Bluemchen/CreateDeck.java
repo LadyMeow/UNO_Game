@@ -42,7 +42,7 @@ public class CreateDeck {
         deck.shuffle();
         deck.printAllCards();
 
-        Player nr1 = new Player("Hansi");
+        Player nr1 = new Player();
         System.out.println(nr1);
 
         // added dealt Cards to player nr1
