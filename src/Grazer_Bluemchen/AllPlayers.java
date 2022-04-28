@@ -3,7 +3,7 @@ package Grazer_Bluemchen;
 import java.util.ArrayList;
 
 public class AllPlayers {
-    ArrayList<Player> allPlayer;
+    public ArrayList<Player> allPlayer;
 
     public AllPlayers() {
         allPlayer = new ArrayList<>();
@@ -11,6 +11,10 @@ public class AllPlayers {
 
     public void addPlayer(Player p) {
         allPlayer.add(p);
+    }
+
+    public Player getPlayer(int index) {
+        return allPlayer.get(index);
     }
 
     @Override

@@ -44,6 +44,9 @@ public class UNOApp {
         CardDeck drawPile = new CardDeck().createDrawPile();
         drawPile.shuffle();
 
+        // discardPile erstellen
+        CardDeck discardPile = new CardDeck().createDiscardPile();
+
         // frage: bot oder mensch?
         for (Player p : allPlayers.allPlayer) {
             output.println("Write your name: ");
@@ -77,7 +80,12 @@ public class UNOApp {
         //TODO: Ausgabe des aktuellen Zustands
         // der Spieler der gerade dran ist: sieht handCards
 
-        System.out.println(allPlayers);
+        // random start player = index
+        System.out.print(allPlayers.getPlayer(0).name + ": ");
+        allPlayers.getPlayer(0).printHandCards();
+
+        // erste Karte wird aufgedeckt
+
 
     }
 

@@ -4,11 +4,10 @@ import java.util.ArrayList;
 
 public class Player {
     public String name;
-    public int order; // 1-4 - equals number of player
+    //public int order; // 1-4 - equals number of player
     public ArrayList<Card> handCards;
 
     public Player() {
-        order++;
         handCards = new ArrayList<>();
     }
 
@@ -20,13 +19,17 @@ public class Player {
         handCards.addAll(a);
     }
 
+    public void printHandCards() {
+        for (Card c : handCards) {
+            System.out.print(c.name + " ");
+        }
+    }
+
     @Override
     public String toString() {
         return "Player{" +
                 "name='" + name + '\'' +
-                ", order=" + order +
                 ", handCards=" + handCards +
                 '}';
     }
-
 }
