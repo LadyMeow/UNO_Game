@@ -1,7 +1,7 @@
 package Grazer_Bluemchen;
 
 public class Card {
-    public String color;
+    public Colors color;
     public int value;
     public String name;
     public int points;
@@ -9,7 +9,7 @@ public class Card {
 
 
     // normal Card
-    public Card(String color, int value) {
+    public Card(Colors color, int value) {
         this.color = color;
         this.value = value;
         name = color + Integer.toString(value);
@@ -17,7 +17,7 @@ public class Card {
     }
 
     // ActionCard
-    public Card(String color, String name) {
+    public Card(Colors color, String name) {
         this.color = color;
         this.name = color + name;
         points = 20;
