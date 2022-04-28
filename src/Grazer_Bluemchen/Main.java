@@ -11,7 +11,11 @@ public class Main {
         Player p4 = new Player();
 
 
-
+        Scanner input = new Scanner(System.in);
+        UNOApp app = new UNOApp(input, System.out);
+        app.Run();
+        input.close();
+        System.out.println("Das Programm wird beendet ...");
 
 
 
