@@ -23,9 +23,9 @@ public class CardDeck {
     }
 
     // austeilen method
-    public ArrayList<Card> dealCards() { // parameter wieviele karten
+    public ArrayList<Card> dealCards(int quantity) {
         ArrayList<Card> handCards = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < quantity; i++) {
             handCards.add(deck.get(i));
             deck.remove(i);
         }
