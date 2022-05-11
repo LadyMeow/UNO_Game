@@ -2,6 +2,7 @@ package Grazer_Bluemchen;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class UNOApp {
@@ -9,11 +10,14 @@ public class UNOApp {
     private final PrintStream output;
     private boolean exit = false;
     private AllPlayers allPlayers = new AllPlayers();
+    private CardDeck deck = new CardDeck();
+    private int currentPlayer;
 
     // constructor
     public UNOApp(Scanner input, PrintStream output) {
         this.input = input;
         this.output = output;
+        currentPlayer = 0;
     }
 
     // GameLoop
@@ -24,34 +28,39 @@ public class UNOApp {
         while (!exit) {
             inputPlayer();
             updateState();
-            //printState();
+            printState();
         }
     }
 
     private void initialize() {
-        // player erstellen (name etc.)
-        Player p1 = new Player();
-        Player p2 = new Player();
-        Player p3 = new Player();
-        Player p4 = new Player();
-
-        allPlayers.addPlayer(p1);
-        allPlayers.addPlayer(p2);
-        allPlayers.addPlayer(p3);
-        allPlayers.addPlayer(p4);
+        // frage: bot oder mensch?
+        output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
+        int botCount = input.nextInt();
+        for (int i = 0; i < 4 - botCount; i++) { // zuerst Humans erstellen
+            allPlayers.addPlayer(new Human());
+        }
+        for (int i = 0; i < botCount; i++) { // dann Bots
+            allPlayers.addPlayer(new Bot());
+        }
 
         // drawPile erstellen
-        CardDeck drawPile = new CardDeck().createDrawPile();
-        drawPile.shuffle();
+        deck.createDrawPile();
+        deck.shuffle();
 
         // discardPile erstellen
-        CardDeck discardPile = new CardDeck().createDiscardPile();
+        deck.addToDiscardPile();
 
-        // frage: bot oder mensch?
+        // name eingeben
         for (Player p : allPlayers.allPlayer) {
-            output.println("Write your name: ");
-            p.name = input.next();
-            p.handCards = drawPile.dealCards(7);
+            if(p instanceof Human) {
+                output.println("Write your name: ");
+                p.name = input.next();
+                p.handCards = deck.dealCards(7);
+            } else {
+                p.name = "Bot";
+                p.handCards = deck.dealCards(7);
+                System.out.println("Bot");
+            }
         }
 
         // shuffle
@@ -65,7 +74,17 @@ public class UNOApp {
 
     private void inputPlayer() {
         // Spieler legt Karte
+        output.println("Spiele eine deiner Karten: ");
+        ArrayList<Card> presentCards = allPlayers.getPlayer(currentPlayer).handCards;
 
+        String playCard = input.next();
+        for (Card c : presentCards) {
+            if(Objects.equals(playCard, c.name)) {
+                allPlayers.getPlayer(currentPlayer).playCard(c);
+                deck.discardpile.add(c);
+                break;
+            }
+        }
 
     }
 
@@ -74,18 +93,26 @@ public class UNOApp {
         // ist Karte gültig?
         // wenn ja, nächster Spieler
 
+        // nachzählen ob gesamt 108 Karten sind!!
+
     }
 
     private void printState() {
         //TODO: Ausgabe des aktuellen Zustands
         // der Spieler der gerade dran ist: sieht handCards
 
+        deck.printDiscardPile();
+
         // random start player = index
-        System.out.print(allPlayers.getPlayer(0).name + ": ");
-        allPlayers.getPlayer(0).printHandCards();
-
+        if(currentPlayer < 4) {
+            currentPlayer++;
+        } else {
+            currentPlayer = 1;
+        }
+        System.out.print(allPlayers.getPlayer(currentPlayer).name + ": ");
+        allPlayers.getPlayer(currentPlayer).printHandCards();
         // erste Karte wird aufgedeckt
-
+        deck.printDiscardPile();
 
     }
 
