@@ -3,7 +3,7 @@ package Grazer_Bluemchen;
 import java.util.ArrayList;
 
 public abstract class Player {
-    public String name;
+    private String name;
     //public int order; // 1-4 - equals number of player
     public ArrayList<Card> handCards;
 
@@ -35,5 +35,13 @@ public abstract class Player {
                 "name='" + name + '\'' +
                 ", handCards=" + handCards +
                 '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class CardDeck {
-    ArrayList<Card> drawpile;
-    ArrayList<Card> discardpile;
+    public ArrayList<Card> drawpile;
+    public ArrayList<Card> discardpile;
 
     // constructor
     public CardDeck() {

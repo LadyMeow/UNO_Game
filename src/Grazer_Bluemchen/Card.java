@@ -1,10 +1,10 @@
 package Grazer_Bluemchen;
 
 public class Card {
-    public Colors color;
-    public int value;
+    private Colors color;
+    private int value;
     public String name;
-    public int points;
+    private int points;
     // name is combination of color + value (z.B: R3)
 
 

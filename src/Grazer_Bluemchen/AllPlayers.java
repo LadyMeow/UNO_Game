@@ -17,6 +17,14 @@ public class AllPlayers {
         return allPlayer.get(index);
     }
 
+    public int countAllPlayerCards() {
+        int sum = 0;
+        for (Player p : allPlayer) {
+            sum += p.handCards.size();
+        }
+       return sum;
+    }
+
     @Override
     public String toString() {
         return "AllPlayers{" +

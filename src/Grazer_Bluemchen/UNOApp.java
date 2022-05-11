@@ -54,19 +54,15 @@ public class UNOApp {
         for (Player p : allPlayers.allPlayer) {
             if(p instanceof Human) {
                 output.println("Write your name: ");
-                p.name = input.next();
+                p.setName(input.next());
                 p.handCards = deck.dealCards(7);
             } else {
-                p.name = "Bot";
+                p.setName("Bot");
                 p.handCards = deck.dealCards(7);
                 System.out.println("Bot");
             }
         }
 
-        // shuffle
-        // deal cards
-        // drawpile - new CardDeck
-        // discardpile - new CardDeck - erste Karte von drawpile wird aufgedeckt auf discardpile
         // spielrichtung
         // random start player
 
@@ -75,8 +71,11 @@ public class UNOApp {
     private void inputPlayer() {
         // Spieler legt Karte
         output.println("Spiele eine deiner Karten: ");
+
+        // presentCards = Karten vom aktuellen Spieler
         ArrayList<Card> presentCards = allPlayers.getPlayer(currentPlayer).handCards;
 
+        // playCard = Karte die gespielt werden soll
         String playCard = input.next();
         for (Card c : presentCards) {
             if(Objects.equals(playCard, c.name)) {
@@ -85,7 +84,8 @@ public class UNOApp {
                 break;
             }
         }
-
+//        output.println("Du hast diese Karte nicht auf der Hand!");
+//        inputPlayer();
     }
 
     private void updateState() {
@@ -93,7 +93,16 @@ public class UNOApp {
         // ist Karte gültig?
         // wenn ja, nächster Spieler
 
-        // nachzählen ob gesamt 108 Karten sind!!
+        // random start player in constructor anpassen??
+        // Player Reihenfolge:
+        if(currentPlayer < 4) {
+            currentPlayer++;
+        } else {
+            currentPlayer = 1;
+        }
+
+        // nachzählen, ob gesamt 108 Karten sind!
+        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
 
     }
 
@@ -101,16 +110,10 @@ public class UNOApp {
         //TODO: Ausgabe des aktuellen Zustands
         // der Spieler der gerade dran ist: sieht handCards
 
-        deck.printDiscardPile();
-
-        // random start player = index
-        if(currentPlayer < 4) {
-            currentPlayer++;
-        } else {
-            currentPlayer = 1;
-        }
-        System.out.print(allPlayers.getPlayer(currentPlayer).name + ": ");
+        // print handCards from currentPlayer
+        System.out.print(allPlayers.getPlayer(currentPlayer).getName() + ": ");
         allPlayers.getPlayer(currentPlayer).printHandCards();
+
         // erste Karte wird aufgedeckt
         deck.printDiscardPile();
 
