@@ -82,6 +82,7 @@ public class CardDeck {
     // discardpile takes 1 card of drawpile (index 0)
     public CardDeck addToDiscardPile() {
         discardpile.add(drawpile.get(0));
+        drawpile.remove(0);
         return new CardDeck();
     }
 

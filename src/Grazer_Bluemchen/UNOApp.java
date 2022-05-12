@@ -50,6 +50,9 @@ public class UNOApp {
         // discardPile erstellen
         deck.addToDiscardPile();
 
+        // nachzählen, ob gesamt 108 Karten sind!
+        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
+
         // name eingeben
         for (Player p : allPlayers.allPlayer) {
             if(p instanceof Human) {
@@ -69,6 +72,7 @@ public class UNOApp {
     }
 
     private void inputPlayer() {
+
         // Spieler legt Karte
         output.println("Spiele eine deiner Karten: ");
 
