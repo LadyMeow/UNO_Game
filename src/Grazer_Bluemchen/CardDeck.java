@@ -13,8 +13,30 @@ public class CardDeck {
         discardpile = new ArrayList<>();
     }
 
-    public void addCardToDrawpile(Card c) {
-        drawpile.add(c);
+    public void addCardToDiscard(String card) {
+        // special card
+        if(card.equals("ColorChange") || card.equals("+4")) {
+            Card addCard = new Card(card);
+            discardpile.add(addCard);
+            return;
+        }
+
+        Colors color = Colors.valueOf(card.substring(0, 1)); // erster Char von card wird als Enum gespeichert
+        String name = card.substring(1);
+
+        // action cards
+        if(card.contains("Skip") || card.contains("Reverse") || card.contains("+2")) {
+            Card addCard = new Card(color, name);
+            discardpile.add(addCard);
+            return;
+        }
+
+        int value = Integer.parseInt(name);
+
+        // normal cards
+        Card addCard = new Card(color, value);
+
+        discardpile.add(addCard);
     }
 
     // drawpile = CardDeck

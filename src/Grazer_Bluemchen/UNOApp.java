@@ -1,8 +1,6 @@
 package Grazer_Bluemchen;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class UNOApp {
@@ -11,13 +9,16 @@ public class UNOApp {
     private boolean exit = false;
     private AllPlayers allPlayers = new AllPlayers();
     private CardDeck deck = new CardDeck();
-    private int currentPlayer;
+    private int currentPlayerNumber;
+    private Player currentPlayer;
+    private Card topCard = new Card(null);
+    private String playedCard;
 
     // constructor
     public UNOApp(Scanner input, PrintStream output) {
         this.input = input;
         this.output = output;
-        currentPlayer = 0;
+        currentPlayerNumber = 0;
     }
 
     // GameLoop
@@ -37,10 +38,10 @@ public class UNOApp {
         output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
         int botCount = input.nextInt();
         for (int i = 0; i < 4 - botCount; i++) { // zuerst Humans erstellen
-            allPlayers.addPlayer(new Human());
+            allPlayers.addPlayer(new Human(input, output));
         }
         for (int i = 0; i < botCount; i++) { // dann Bots
-            allPlayers.addPlayer(new Bot());
+            allPlayers.addPlayer(new Bot(input, output));
         }
 
         // drawPile erstellen
@@ -49,6 +50,7 @@ public class UNOApp {
 
         // discardPile erstellen
         deck.addToDiscardPile();
+        topCard = deck.discardpile.get(0);
 
         // nachzählen, ob gesamt 108 Karten sind!
         System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
@@ -66,30 +68,29 @@ public class UNOApp {
             }
         }
 
+        //CurrentPlayer initialize (damit direkt auf Player zugegriffen werden kann)
+        currentPlayer = allPlayers.getPlayer(currentPlayerNumber);
+
         // spielrichtung
         // random start player
 
     }
 
     private void inputPlayer() {
-
-        // Spieler legt Karte
-        output.println("Spiele eine deiner Karten: ");
-
-        // presentCards = Karten vom aktuellen Spieler
-        ArrayList<Card> presentCards = allPlayers.getPlayer(currentPlayer).handCards;
-
-        // playCard = Karte die gespielt werden soll
-        String playCard = input.next();
-        for (Card c : presentCards) {
-            if(Objects.equals(playCard, c.name)) {
-                allPlayers.getPlayer(currentPlayer).playCard(c);
-                deck.discardpile.add(c);
-                break;
+        // Bot legt Karte
+        if(currentPlayer instanceof Bot) {
+            playedCard = currentPlayer.searchHandCards(topCard);
+            if(playedCard == null) {
+                currentPlayer.handCards.addAll(deck.dealCards(1)); // bot hebt 1 card ab
+                return;
             }
+        } else { // Spieler legt Karte
+            playedCard = currentPlayer.searchHandCards(topCard);
         }
-//        output.println("Du hast diese Karte nicht auf der Hand!");
-//        inputPlayer();
+        output.println("Du hast Karte: " + playedCard + " gespielt.");
+        currentPlayer.removeHandCard(playedCard); // remove from handCards
+        deck.addCardToDiscard(playedCard); // add to discardpile
+
     }
 
     private void updateState() {
@@ -99,11 +100,12 @@ public class UNOApp {
 
         // random start player in constructor anpassen??
         // Player Reihenfolge:
-        if(currentPlayer < 4) {
-            currentPlayer++;
+        if(currentPlayerNumber < 4) {
+            currentPlayerNumber++;
         } else {
-            currentPlayer = 1;
+            currentPlayerNumber = 1;
         }
+        currentPlayer = allPlayers.getPlayer(currentPlayerNumber);
 
         // nachzählen, ob gesamt 108 Karten sind!
         System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
@@ -115,8 +117,8 @@ public class UNOApp {
         // der Spieler der gerade dran ist: sieht handCards
 
         // print handCards from currentPlayer
-        System.out.print(allPlayers.getPlayer(currentPlayer).getName() + ": ");
-        allPlayers.getPlayer(currentPlayer).printHandCards();
+        System.out.print(allPlayers.getPlayer(currentPlayerNumber).getName() + ": ");
+        allPlayers.getPlayer(currentPlayerNumber).printHandCards();
 
         // erste Karte wird aufgedeckt
         deck.printDiscardPile();

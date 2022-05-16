@@ -1,18 +1,20 @@
 package Grazer_Bluemchen;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public abstract class Player {
     private String name;
     //public int order; // 1-4 - equals number of player
     public ArrayList<Card> handCards;
+    protected final Scanner input;
+    protected final PrintStream output;
 
-    public Player() {
+    public Player(Scanner input, PrintStream output) {
         handCards = new ArrayList<>();
-    }
-
-    public void addCard(Card c) {
-        handCards.add(c);
+        this.input = input;
+        this.output = output;
     }
 
     public void addHandCards(ArrayList<Card> a) {
@@ -26,8 +28,16 @@ public abstract class Player {
         System.out.println();
     }
 
-    // play cards
-    public abstract Card playCard(Card c);
+    // remove Card from handCards
+    public void removeHandCard(String card) {
+        handCards.removeIf(c -> c.name.equals(card));
+    }
+
+    // searchCards (only Bot)
+    public abstract String searchHandCards(Card topCard);
+
+    // HumanPlay (human only)
+//    public abstract Card humanPlay(String inputCard);
 
     @Override
     public String toString() {
@@ -37,10 +47,12 @@ public abstract class Player {
                 '}';
     }
 
+    // getter
     public String getName() {
         return name;
     }
 
+    // setter
     public void setName(String name) {
         this.name = name;
     }

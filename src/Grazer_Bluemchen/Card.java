@@ -16,7 +16,7 @@ public class Card {
         points = value;
     }
 
-    // ActionCard
+    // ActionCard (Reverse, +2, skip)
     public Card(Colors color, String name) {
         this.color = color;
         this.name = color + name;
@@ -24,7 +24,7 @@ public class Card {
 
     }
 
-    // SpecialCard
+    // SpecialCard (+4, ColorChange)
     public Card(String name) {
         this.name = name;
         points = 50;
@@ -33,5 +33,17 @@ public class Card {
     @Override
     public String toString() {
         return name;
+    }
+
+    public Colors getColor() {
+        return color;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public int getPoints() {
+        return points;
     }
 }
