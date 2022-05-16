@@ -11,6 +11,5 @@ public class Main {
         input.close();
         System.out.println("Das Programm wird beendet ...");
 
-
     }
 }

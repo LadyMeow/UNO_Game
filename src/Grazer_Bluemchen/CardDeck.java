@@ -13,49 +13,25 @@ public class CardDeck {
         discardpile = new ArrayList<>();
     }
 
-    public boolean checkCard(String playedCard) {
-        Colors color = Colors.valueOf(playedCard.substring(0, 1)); // erster Char von card wird als Enum gespeichert
-        String name = playedCard.substring(1);
-        int value = Integer.parseInt(name);
+    public boolean checkCard(Card playedCard) {
+
         Card topCard = discardpile.get(discardpile.size() - 1);
 
-        if(color == topCard.getColor()){
+        if(playedCard.getColor() == topCard.getColor()){
             return true;
         }
-        if(value == topCard.getValue()) {
+        if(playedCard.getValue() == topCard.getValue()) {
             return true;
         }
-        if(playedCard.equals("ColorChange") || playedCard.equals("+4")) {
+        if(playedCard.name.equals("ColorChange") || playedCard.name.equals("+4")) {
             return true;
         }
 
         return false;
     }
 
-    public void addCardToDiscard(String card) {
-        // special card
-        if(card.equals("ColorChange") || card.equals("+4")) {
-            Card addCard = new Card(card);
-            discardpile.add(addCard);
-            return;
-        }
-
-        Colors color = Colors.valueOf(card.substring(0, 1)); // erster Char von card wird als Enum gespeichert
-        String name = card.substring(1);
-
-        // action cards
-        if(card.contains("Skip") || card.contains("Reverse") || card.contains("+2")) {
-            Card addCard = new Card(color, name);
-            discardpile.add(addCard);
-            return;
-        }
-
-        int value = Integer.parseInt(name);
-
-        // normal cards
-        Card addCard = new Card(color, value);
-
-        discardpile.add(addCard);
+    public void addCardToDiscard(Card card) {
+        discardpile.add(card);
     }
 
     // shuffle method
@@ -67,8 +43,8 @@ public class CardDeck {
     public ArrayList<Card> dealCards(int quantity) {
         ArrayList<Card> handCards = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
-            handCards.add(drawpile.get(i));
-            drawpile.remove(i);
+            handCards.add(drawpile.get(0));
+            drawpile.remove(0);
         }
         return handCards;
     }

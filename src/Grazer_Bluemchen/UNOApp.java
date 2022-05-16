@@ -11,8 +11,8 @@ public class UNOApp {
     private CardDeck deck = new CardDeck();
     private int currentPlayerNumber;
     private Player currentPlayer;
-    private Card topCard = new Card(null);
-    private String playedCard;
+    private Card topCard;
+    private Card playedCard;
 
     // constructor
     public UNOApp(Scanner input, PrintStream output) {
@@ -90,7 +90,6 @@ public class UNOApp {
             playedCard = currentPlayer.searchHandCards(topCard);
         }
         output.println("Du hast Karte: " + playedCard + " gespielt.");
-
 
     }
 

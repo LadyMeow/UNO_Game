@@ -9,14 +9,14 @@ public class Human extends Player{
         super(input, output);
     }
 
-    public String searchHandCards(Card topCard) {
+    public Card searchHandCards(Card topCard) {
         while (true) {
             output.println("Spiele eine deiner Karten: ");
             String playCard = input.next();
 
             for (Card hc : handCards) {
                 if (hc.name.equalsIgnoreCase(playCard)) {
-                    return hc.name;
+                    return hc;
                 }
             }
             System.out.println("Du hast diese Karte nicht auf der Hand! Spiele eine andere Karte!");

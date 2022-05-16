@@ -29,12 +29,12 @@ public abstract class Player {
     }
 
     // remove Card from handCards
-    public void removeHandCard(String card) {
-        handCards.removeIf(c -> c.name.equals(card));
+    public void removeHandCard(Card card) {
+        handCards.removeIf(c -> c.equals(card));
     }
 
     // searchCards (only Bot)
-    public abstract String searchHandCards(Card topCard);
+    public abstract Card searchHandCards(Card topCard);
 
 
     @Override
