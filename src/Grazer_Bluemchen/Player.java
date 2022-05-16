@@ -36,8 +36,6 @@ public abstract class Player {
     // searchCards (only Bot)
     public abstract String searchHandCards(Card topCard);
 
-    // HumanPlay (human only)
-//    public abstract Card humanPlay(String inputCard);
 
     @Override
     public String toString() {

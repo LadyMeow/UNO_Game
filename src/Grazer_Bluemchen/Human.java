@@ -22,11 +22,5 @@ public class Human extends Player{
             System.out.println("Du hast diese Karte nicht auf der Hand! Spiele eine andere Karte!");
         }
     }
-    // kommandos:
-    // gültiger Name einer Karte
-    // karte abheben
 
-    // Hilfe anzeigen
-    // aktuelle Punkte
-    // uno rufen
 }

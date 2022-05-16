@@ -13,6 +13,25 @@ public class CardDeck {
         discardpile = new ArrayList<>();
     }
 
+    public boolean checkCard(String playedCard) {
+        Colors color = Colors.valueOf(playedCard.substring(0, 1)); // erster Char von card wird als Enum gespeichert
+        String name = playedCard.substring(1);
+        int value = Integer.parseInt(name);
+        Card topCard = discardpile.get(discardpile.size() - 1);
+
+        if(color == topCard.getColor()){
+            return true;
+        }
+        if(value == topCard.getValue()) {
+            return true;
+        }
+        if(playedCard.equals("ColorChange") || playedCard.equals("+4")) {
+            return true;
+        }
+
+        return false;
+    }
+
     public void addCardToDiscard(String card) {
         // special card
         if(card.equals("ColorChange") || card.equals("+4")) {
@@ -38,9 +57,6 @@ public class CardDeck {
 
         discardpile.add(addCard);
     }
-
-    // drawpile = CardDeck
-    // discardpile
 
     // shuffle method
     public void shuffle() {

@@ -18,7 +18,7 @@ public class UNOApp {
     public UNOApp(Scanner input, PrintStream output) {
         this.input = input;
         this.output = output;
-        currentPlayerNumber = 0;
+        currentPlayerNumber = 1;
     }
 
     // GameLoop
@@ -56,20 +56,22 @@ public class UNOApp {
         System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
 
         // name eingeben
+        int botNumber = 1;
         for (Player p : allPlayers.allPlayer) {
             if(p instanceof Human) {
                 output.println("Write your name: ");
                 p.setName(input.next());
                 p.handCards = deck.dealCards(7);
             } else {
-                p.setName("Bot");
+                p.setName("Bot" + botNumber);
+                botNumber++;
                 p.handCards = deck.dealCards(7);
-                System.out.println("Bot");
+                System.out.println(p.getName());
             }
         }
 
         //CurrentPlayer initialize (damit direkt auf Player zugegriffen werden kann)
-        currentPlayer = allPlayers.getPlayer(currentPlayerNumber);
+        currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
 
         // spielrichtung
         // random start player
@@ -88,8 +90,7 @@ public class UNOApp {
             playedCard = currentPlayer.searchHandCards(topCard);
         }
         output.println("Du hast Karte: " + playedCard + " gespielt.");
-        currentPlayer.removeHandCard(playedCard); // remove from handCards
-        deck.addCardToDiscard(playedCard); // add to discardpile
+
 
     }
 
@@ -98,6 +99,15 @@ public class UNOApp {
         // ist Karte gültig?
         // wenn ja, nächster Spieler
 
+        // Card valid?
+        deck.checkCard(playedCard);
+
+        // check Card action (Aktionskarten?)
+
+        // move Cards
+        currentPlayer.removeHandCard(playedCard); // remove from handCards
+        deck.addCardToDiscard(playedCard); // add to discardpile
+
         // random start player in constructor anpassen??
         // Player Reihenfolge:
         if(currentPlayerNumber < 4) {
@@ -105,7 +115,7 @@ public class UNOApp {
         } else {
             currentPlayerNumber = 1;
         }
-        currentPlayer = allPlayers.getPlayer(currentPlayerNumber);
+        currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
 
         // nachzählen, ob gesamt 108 Karten sind!
         System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
@@ -117,13 +127,21 @@ public class UNOApp {
         // der Spieler der gerade dran ist: sieht handCards
 
         // print handCards from currentPlayer
-        System.out.print(allPlayers.getPlayer(currentPlayerNumber).getName() + ": ");
-        allPlayers.getPlayer(currentPlayerNumber).printHandCards();
+        System.out.print(currentPlayer.getName() + ": ");
+        currentPlayer.printHandCards();
 
         // erste Karte wird aufgedeckt
         deck.printDiscardPile();
 
     }
+
+    // kommandos:
+    // gültiger Name einer Karte
+    // karte abheben
+
+    // Hilfe anzeigen
+    // aktuelle Punkte
+    // uno rufen
 
 }
 
