@@ -11,8 +11,13 @@ public class Human extends Player{
 
     public Card searchHandCards(Card topCard) {
         while (true) {
-            output.println("Spiele eine deiner Karten: ");
+            output.println("Spiele eine deiner Karten oder hebe eine Karte (mit h): ");
             String playCard = input.next();
+
+            // abheben & Karte Spielen noch möglich!
+            if(playCard.equalsIgnoreCase("h")) {
+                return null;
+            }
 
             for (Card hc : handCards) {
                 if (hc.name.equalsIgnoreCase(playCard)) {

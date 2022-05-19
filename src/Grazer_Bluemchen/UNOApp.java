@@ -87,7 +87,16 @@ public class UNOApp {
                 return;
             }
         } else { // Spieler legt Karte
+            // wenn Eingabe h: eine Karte heben
             playedCard = currentPlayer.searchHandCards(topCard);
+            if(playedCard == null) {
+                currentPlayer.handCards.addAll(deck.dealCards(1));
+                // print handcards
+                System.out.print(currentPlayer.getName() + ": ");
+                currentPlayer.printHandCards();
+
+                playedCard = currentPlayer.searchHandCards(topCard);
+            }
         }
         output.println("Du hast Karte: " + playedCard + " gespielt.");
 
@@ -98,15 +107,27 @@ public class UNOApp {
         // ist Karte gültig?
         // wenn ja, nächster Spieler
 
-        // Card valid?
-        deck.checkCard(playedCard);
+        // Card valid? - boolean
+        int valid = 2; // 0: not valid card, 1: valid card played, 2: no card played (only picked a card), 3: special card was played (Farbwunsch)
+        if(playedCard != null) {
+            valid = deck.checkCard(playedCard);
+        }
 
         // check Card action (Aktionskarten?)
 
         // move Cards
-        currentPlayer.removeHandCard(playedCard); // remove from handCards
-        deck.addCardToDiscard(playedCard); // add to discardpile
-
+        if(valid == 1) {
+            currentPlayer.removeHandCard(playedCard); // remove from handCards
+            deck.addCardToDiscard(playedCard); // add to discardpile
+        } else if (valid == 0){
+            output.println("Diese Karte ist nicht gültig!");
+            return;
+        } else if(valid == 2) {
+            output.println("nächster Spieler ist dran");
+        } else if (valid == 3) {
+            // nach Farbwunsch fragen
+            // als Variable speichern (Enum)
+        }
         // random start player in constructor anpassen??
         // Player Reihenfolge:
         if(currentPlayerNumber < 4) {

@@ -13,21 +13,21 @@ public class CardDeck {
         discardpile = new ArrayList<>();
     }
 
-    public boolean checkCard(Card playedCard) {
+    public int checkCard(Card playedCard) {
 
         Card topCard = discardpile.get(discardpile.size() - 1);
 
         if(playedCard.getColor() == topCard.getColor()){
-            return true;
+            return 1;
         }
         if(playedCard.getValue() == topCard.getValue()) {
-            return true;
+            return 1;
         }
         if(playedCard.name.equals("ColorChange") || playedCard.name.equals("+4")) {
-            return true;
+            return 3;
         }
 
-        return false;
+        return 0;
     }
 
     public void addCardToDiscard(Card card) {

@@ -17,12 +17,12 @@ public class Bot extends Player{
         for (Card c : handCards) {
             if(topCard.getColor() == c.getColor()) {
                 return c;
-            }
-            if(topCard.getValue() == c.getValue()) {
+            } else if (topCard.getValue() == c.getValue()) {
                 return c;
-            }
-            if(c.name.equals("ColorChange") || c.name.equals("+4")) {
+            } else if(c.name.equals("ColorChange") || c.name.equals("+4")) {
                 return c;
+            } else {
+                return null;
             }
         }
         return null;
