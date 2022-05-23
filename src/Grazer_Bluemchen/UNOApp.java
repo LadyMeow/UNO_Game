@@ -13,6 +13,7 @@ public class UNOApp {
     private Player currentPlayer;
     private Card topCard;
     private Card playedCard;
+    private boolean direction = true; // im Uhrzeigersinn
 
     // constructor
     public UNOApp(Scanner input, PrintStream output) {
@@ -58,7 +59,7 @@ public class UNOApp {
         // name eingeben
         int botNumber = 1;
         for (Player p : allPlayers.allPlayer) {
-            if(p instanceof Human) {
+            if (p instanceof Human) {
                 output.println("Write your name: ");
                 p.setName(input.next());
                 p.handCards = deck.dealCards(7);
@@ -80,26 +81,31 @@ public class UNOApp {
 
     private void inputPlayer() {
         // Bot legt Karte
-        if(currentPlayer instanceof Bot) {
+        if (currentPlayer instanceof Bot) {
             playedCard = currentPlayer.searchHandCards(topCard);
-            if(playedCard == null) {
+            if (playedCard == null) {
                 currentPlayer.handCards.addAll(deck.dealCards(1)); // bot hebt 1 card ab
                 return;
             }
         } else { // Spieler legt Karte
             // wenn Eingabe h: eine Karte heben
             playedCard = currentPlayer.searchHandCards(topCard);
-            if(playedCard == null) {
+
+            if (playedCard == null) {
                 currentPlayer.handCards.addAll(deck.dealCards(1));
                 // print handcards
                 System.out.print(currentPlayer.getName() + ": ");
                 currentPlayer.printHandCards();
 
-                playedCard = currentPlayer.searchHandCards(topCard);
+                playedCard = currentPlayer.playIfPossible();
             }
         }
-        output.println("Du hast Karte: " + playedCard + " gespielt.");
 
+        if (playedCard == null) {
+            output.println("Du hast keine Karte gespielt, der Nächste ist dran!");
+        } else {
+            output.println("Du hast Karte: " + playedCard + " gespielt. Der Nächste Spieler ist dran!");
+        }
     }
 
     private void updateState() {
@@ -108,33 +114,42 @@ public class UNOApp {
         // wenn ja, nächster Spieler
 
         // Card valid? - boolean
-        int valid = 2; // 0: not valid card, 1: valid card played, 2: no card played (only picked a card), 3: special card was played (Farbwunsch)
-        if(playedCard != null) {
+        // -1: not valid card, 0: no card played (only picked a card), 1: valid card played
+        // 2: +2, 3: reverse, 4: skip
+        // 5: special card was played (Farbwunsch)
+
+        if (playedCard != null) {
+            int valid = 0;
             valid = deck.checkCard(playedCard);
-        }
 
-        // check Card action (Aktionskarten?)
+            // check if valid or action or special
+            if (valid == -1) {
+                output.println("Diese Karte ist nicht gültig!");
+                return;
+            } else if (valid == 0) {
+                output.println("nächster Spieler ist dran");
+            } else if (valid == 2) {
+                allPlayers.getPlayer(currentPlayerNumber).handCards.addAll(deck.dealCards(2));
+                output.println("Du hast 2 Karten bekommen!!");
+            } else if (valid == 3) {
+                direction = !direction; // richtung ändern
+                output.println("Richtungswechsel!");
+            }
 
-        // move Cards
-        if(valid == 1) {
-            currentPlayer.removeHandCard(playedCard); // remove from handCards
-            deck.addCardToDiscard(playedCard); // add to discardpile
-        } else if (valid == 0){
-            output.println("Diese Karte ist nicht gültig!");
-            return;
-        } else if(valid == 2) {
-            output.println("nächster Spieler ist dran");
-        } else if (valid == 3) {
+            // move cards
+            if (valid > 0) {
+                currentPlayer.removeHandCard(playedCard); // remove from handCards
+                deck.addCardToDiscard(playedCard); // add to discardpile
+                topCard = playedCard; // topCard aktualisiert
+            }
+
             // nach Farbwunsch fragen
             // als Variable speichern (Enum)
         }
+
         // random start player in constructor anpassen??
         // Player Reihenfolge:
-        if(currentPlayerNumber < 4) {
-            currentPlayerNumber++;
-        } else {
-            currentPlayerNumber = 1;
-        }
+        currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
         currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
 
         // nachzählen, ob gesamt 108 Karten sind!

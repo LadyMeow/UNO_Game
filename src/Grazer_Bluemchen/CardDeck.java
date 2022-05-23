@@ -14,20 +14,33 @@ public class CardDeck {
     }
 
     public int checkCard(Card playedCard) {
+        int validation = -1;
 
         Card topCard = discardpile.get(discardpile.size() - 1);
 
-        if(playedCard.getColor() == topCard.getColor()){
-            return 1;
+        if (playedCard.getColor() == topCard.getColor()) {
+            validation = 1;
         }
-        if(playedCard.getValue() == topCard.getValue()) {
-            return 1;
-        }
-        if(playedCard.name.equals("ColorChange") || playedCard.name.equals("+4")) {
-            return 3;
+        if (playedCard.getValue() == topCard.getValue()) {
+            validation = 1;
         }
 
-        return 0;
+        if (playedCard.name.contains("+2")) {
+            validation = 2;
+        }
+        if (playedCard.name.contains("Reverse")) {
+            validation = 3;
+        }
+
+        // special Cards kommen zuerst
+
+
+
+        if (playedCard.name.equals("ColorChange") || playedCard.name.equals("+4")) {
+            validation = 5;
+        }
+
+        return validation;
     }
 
     public void addCardToDiscard(Card card) {

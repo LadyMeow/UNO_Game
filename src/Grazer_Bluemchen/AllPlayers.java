@@ -1,6 +1,7 @@
 package Grazer_Bluemchen;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class AllPlayers {
     public ArrayList<Player> allPlayer;
@@ -23,6 +24,25 @@ public class AllPlayers {
             sum += p.handCards.size();
         }
        return sum;
+    }
+
+    public int nextPlayer(boolean direction, int currentPlayerNumber) {
+
+        if(direction) { // if true
+            if (currentPlayerNumber < 4) {
+                currentPlayerNumber++;
+            } else {
+                currentPlayerNumber = 1;
+            }
+        } else {
+            if (currentPlayerNumber > 1) {
+                currentPlayerNumber--;
+            } else {
+                currentPlayerNumber = 4;
+            }
+        }
+
+        return currentPlayerNumber;
     }
 
     @Override

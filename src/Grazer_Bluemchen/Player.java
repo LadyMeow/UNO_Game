@@ -36,6 +36,9 @@ public abstract class Player {
     // searchCards (only Bot)
     public abstract Card searchHandCards(Card topCard);
 
+    // play Card if possible
+    public abstract Card playIfPossible();
+
 
     @Override
     public String toString() {
