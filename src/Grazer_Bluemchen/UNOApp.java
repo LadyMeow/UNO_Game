@@ -20,7 +20,7 @@ public class UNOApp {
     public UNOApp(Scanner input, PrintStream output) {
         this.input = input;
         this.output = output;
-        currentPlayerNumber = (int) (Math.random() * (4 - 1)) + 1; // random number
+        currentPlayerNumber = (int) (Math.random() * (4 - 1)) + 1; // random number (1-4)
     }
 
     // GameLoop
@@ -50,13 +50,6 @@ public class UNOApp {
         deck.createDrawPile();
         deck.shuffle();
 
-        // discardPile erstellen
-        deck.addToDiscardPile();
-        topCard = deck.discardpile.get(0);
-
-        // nachzählen, ob gesamt 108 Karten sind!
-        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards())); // details!
-
         // name eingeben
         int botNumber = 1;
         for (Player p : allPlayers.allPlayer) {
@@ -74,9 +67,28 @@ public class UNOApp {
 
         //CurrentPlayer initialize (damit direkt auf Player zugegriffen werden kann)
         currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+        output.println("Startspieler (wurde zufällig gewählt): " + currentPlayer);
 
-        // spielrichtung
-        // random start player
+        // discardPile erstellen
+        deck.addToDiscardPile();
+        topCard = deck.discardpile.get(0);
+
+        if (topCard.name.contains("Skip")) {
+            currentPlayerNumber++;
+            currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+            output.println("Der erste Spieler: " + currentPlayer + " muss aussetzen!");
+        } else if (topCard.name.contains("+2")) {
+            currentPlayer.handCards.addAll(deck.dealCards(2));
+            output.println("Du hast 2 Karten bekommen!!");
+        } else if (topCard.name.contains("Reverse")) {
+            direction = false;
+        } else if (topCard.name.equals("ColorChange")) {
+            colorWish = currentPlayer.chooseColor();
+            topCard.setColor(colorWish);
+        }
+
+        // nachzählen, ob gesamt 108 Karten sind!
+        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards())); // details!
 
     }
 
