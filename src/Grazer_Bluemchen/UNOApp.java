@@ -20,7 +20,7 @@ public class UNOApp {
     public UNOApp(Scanner input, PrintStream output) {
         this.input = input;
         this.output = output;
-        currentPlayerNumber = 1;
+        currentPlayerNumber = (int) (Math.random() * (4 - 1)) + 1; // random number
     }
 
     // GameLoop
@@ -114,6 +114,8 @@ public class UNOApp {
         // ist Karte gültig?
         // wenn ja, nächster Spieler
 
+        int nextPlayerIndex = allPlayers.nextPlayer(direction, currentPlayerNumber) - 1;
+
         // Card valid? - boolean
         // -1: not valid card, 0: no card played (only picked a card), 1: valid card played
         // 2: +2, 3: reverse, 4: skip
@@ -130,11 +132,7 @@ public class UNOApp {
             } else if (valid == 0) { // normal Card
                 output.println("nächster Spieler ist dran");
             } else if (valid == 2) { // +2 Card
-                if(direction) {
-                    allPlayers.getPlayer(currentPlayerNumber).handCards.addAll(deck.dealCards(2));
-                } else {
-                    allPlayers.getPlayer(currentPlayerNumber - 2).handCards.addAll(deck.dealCards(2));
-                }
+                allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(2));
                 output.println("Du hast 2 Karten bekommen!!");
             } else if (valid == 3) { // Reverse Card
                 direction = !direction;
@@ -147,11 +145,7 @@ public class UNOApp {
                 colorWish = currentPlayer.chooseColor();
                 playedCard.setColor(colorWish);
                 output.println("Der nächste Spieler ist dran.");
-                if(direction) {
-                    allPlayers.getPlayer(currentPlayerNumber).handCards.addAll(deck.dealCards(4));
-                } else {
-                    allPlayers.getPlayer(currentPlayerNumber - 2).handCards.addAll(deck.dealCards(4));
-                }
+                allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(4));
                 output.println("Du hast 4 Karten bekommen!!");
             }
 

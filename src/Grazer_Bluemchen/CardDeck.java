@@ -55,6 +55,15 @@ public class CardDeck {
     public ArrayList<Card> dealCards(int quantity) {
         ArrayList<Card> handCards = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
+            if(drawpile.size() == 0) {
+                Card helper = discardpile.get(0); // top card
+                discardpile.remove(0);
+
+                Collections.shuffle(discardpile);
+                drawpile.addAll(discardpile);
+                discardpile.clear();
+                discardpile.add(helper);
+            }
             handCards.add(drawpile.get(0));
             drawpile.remove(0);
         }
@@ -81,28 +90,28 @@ public class CardDeck {
                     Card c = new Card(co, j);
                     drawpile.add(c);
                 }
-                Card c1 = new Card(co, "+2");
-                Card c2 = new Card(co, "Reverse");
-                Card c3 = new Card(co, "Skip");
-                drawpile.add(c1);
-                drawpile.add(c2);
-                drawpile.add(c3);
+//                Card c1 = new Card(co, "+2");
+//                Card c2 = new Card(co, "Reverse");
+//                Card c3 = new Card(co, "Skip");
+//                drawpile.add(c1);
+//                drawpile.add(c2);
+//                drawpile.add(c3);
             }
         }
 
-        // 0er cards
-        for (Colors co : Colors.values()) {
-            Card o = new Card(co, 0);
-            drawpile.add(o);
-        }
-
-        // special cards
-        for (int i = 0; i < 4; i++) {
-            Card s1 = new Card("+4");
-            Card s2 = new Card("ColorChange");
-            drawpile.add(s1);
-            drawpile.add(s2);
-        }
+//        // 0er cards
+//        for (Colors co : Colors.values()) {
+//            Card o = new Card(co, 0);
+//            drawpile.add(o);
+//        }
+//
+//        // special cards
+//        for (int i = 0; i < 4; i++) {
+//            Card s1 = new Card("+4");
+//            Card s2 = new Card("ColorChange");
+//            drawpile.add(s1);
+//            drawpile.add(s2);
+//        }
     }
 
     // discardpile takes 1 card of drawpile (index 0)
