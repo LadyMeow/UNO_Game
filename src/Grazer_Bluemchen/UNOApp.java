@@ -130,7 +130,11 @@ public class UNOApp {
             } else if (valid == 0) { // normal Card
                 output.println("nächster Spieler ist dran");
             } else if (valid == 2) { // +2 Card
-                allPlayers.getPlayer(currentPlayerNumber).handCards.addAll(deck.dealCards(2));
+                if(direction) {
+                    allPlayers.getPlayer(currentPlayerNumber).handCards.addAll(deck.dealCards(2));
+                } else {
+                    allPlayers.getPlayer(currentPlayerNumber - 2).handCards.addAll(deck.dealCards(2));
+                }
                 output.println("Du hast 2 Karten bekommen!!");
             } else if (valid == 3) { // Reverse Card
                 direction = !direction;
@@ -143,7 +147,11 @@ public class UNOApp {
                 colorWish = currentPlayer.chooseColor();
                 playedCard.setColor(colorWish);
                 output.println("Der nächste Spieler ist dran.");
-                allPlayers.getPlayer(currentPlayerNumber).handCards.addAll(deck.dealCards(4));
+                if(direction) {
+                    allPlayers.getPlayer(currentPlayerNumber).handCards.addAll(deck.dealCards(4));
+                } else {
+                    allPlayers.getPlayer(currentPlayerNumber - 2).handCards.addAll(deck.dealCards(4));
+                }
                 output.println("Du hast 4 Karten bekommen!!");
             }
 

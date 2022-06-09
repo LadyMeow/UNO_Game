@@ -21,7 +21,7 @@ public class CardDeck {
         if (playedCard.getColor() == topCard.getColor()) {
             validation = 1;
         }
-        if (playedCard.getValue() == topCard.getValue()) {
+        if (playedCard.getValue() == topCard.getValue() && (topCard.getValue() >= 0)) { // special und action cards value = -1!!
             validation = 1;
         }
         if (playedCard.name.contains("+2") && ((topCard.getColor() == playedCard.getColor()) || topCard.name.contains("+2"))) {

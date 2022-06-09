@@ -22,6 +22,7 @@ public class Card {
     public Card(Colors color, String name) {
         this.color = color;
         this.name = color + name;
+        this.value = -1;
         this.points = 20;
     }
 
@@ -32,6 +33,7 @@ public class Card {
         if(card.equals("ColorChange") || card.equals("+4")) {
             this.name = card;
             this.points = 50;
+            this.value = -1;
             return;
         }
 
