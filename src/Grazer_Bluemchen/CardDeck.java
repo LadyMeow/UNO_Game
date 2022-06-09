@@ -24,14 +24,15 @@ public class CardDeck {
         if (playedCard.getValue() == topCard.getValue()) {
             validation = 1;
         }
-
         if (playedCard.name.contains("+2")) {
             validation = 2;
         }
-        if (playedCard.name.contains("Reverse")) {
+        if (playedCard.name.toLowerCase().contains("reverse")) {
             validation = 3;
         }
-
+        if (playedCard.name.toLowerCase().contains("skip")) {
+            validation = 4;
+        }
         // special Cards kommen zuerst
 
 

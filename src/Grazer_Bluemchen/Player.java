@@ -42,10 +42,7 @@ public abstract class Player {
 
     @Override
     public String toString() {
-        return "Player{" +
-                "name='" + name + '\'' +
-                ", handCards=" + handCards +
-                '}';
+        return name;
     }
 
     // getter

@@ -34,7 +34,7 @@ public class UNOApp {
         }
     }
 
-    private void initialize() {
+    private void initialize() { // wenn keine Zahl von 0-3 eingegeben wird -crush!!
         // frage: bot oder mensch?
         output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
         int botCount = input.nextInt();
@@ -123,16 +123,16 @@ public class UNOApp {
             valid = deck.checkCard(playedCard);
 
             // check if valid or action or special
-            if (valid == -1) {
+            if (valid == -1) { // no valid Card
                 output.println("Diese Karte ist nicht gültig!");
                 return;
-            } else if (valid == 0) {
+            } else if (valid == 0) { // normal Card
                 output.println("nächster Spieler ist dran");
-            } else if (valid == 2) {
+            } else if (valid == 2) { // +2 Card
                 allPlayers.getPlayer(currentPlayerNumber).handCards.addAll(deck.dealCards(2));
                 output.println("Du hast 2 Karten bekommen!!");
-            } else if (valid == 3) {
-                direction = !direction; // richtung ändern
+            } else if (valid == 3) { // Reverse Card
+                direction = !direction;
                 output.println("Richtungswechsel!");
             }
 
@@ -141,6 +141,12 @@ public class UNOApp {
                 currentPlayer.removeHandCard(playedCard); // remove from handCards
                 deck.addCardToDiscard(playedCard); // add to discardpile
                 topCard = playedCard; // topCard aktualisiert
+            }
+
+            if (valid == 4) { // Skip Card
+                currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
+                currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+                output.println(currentPlayer + ": du musst aussetzen!");
             }
 
             // nach Farbwunsch fragen
