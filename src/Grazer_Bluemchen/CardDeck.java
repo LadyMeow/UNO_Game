@@ -24,19 +24,21 @@ public class CardDeck {
         if (playedCard.getValue() == topCard.getValue()) {
             validation = 1;
         }
-        if (playedCard.name.contains("+2")) {
+        if (playedCard.name.contains("+2") && ((topCard.getColor() == playedCard.getColor()) || topCard.name.contains("+2"))) {
             validation = 2;
         }
-        if (playedCard.name.toLowerCase().contains("reverse")) {
+        if (playedCard.name.toLowerCase().contains("reverse") && ((topCard.getColor() == playedCard.getColor()) || topCard.name.contains("Reverse"))) {
             validation = 3;
         }
-        if (playedCard.name.toLowerCase().contains("skip")) {
+        if (playedCard.name.toLowerCase().contains("skip") && ((topCard.getColor() == playedCard.getColor()) || topCard.name.contains("Skip"))) {
             validation = 4;
         }
         if (playedCard.name.toLowerCase().contains("colorchange")) {
             validation = 5;
         }
-
+        if (playedCard.name.contains("+4")) {
+            validation = 6;
+        }
         return validation;
     }
 

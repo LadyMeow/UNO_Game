@@ -72,6 +72,10 @@ public class Card {
         return points;
     }
 
+    public void setColor(Colors color) {
+        this.color = color;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

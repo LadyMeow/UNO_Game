@@ -30,7 +30,12 @@ public abstract class Player {
 
     // remove Card from handCards
     public void removeHandCard(Card card) {
-        handCards.removeIf(c -> c.equals(card));
+        for (Card c : handCards) {
+            if(c.equals(card)) {
+                handCards.remove(c);
+                return;
+            }
+        }
     }
 
     // searchCards (only Bot)

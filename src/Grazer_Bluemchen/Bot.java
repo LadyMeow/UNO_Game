@@ -32,5 +32,14 @@ public class Bot extends Player {
         return null;
     }
 
-
+    @Override
+    public Colors chooseColor() {
+        for (Card c : handCards) {
+            if ((!c.name.equals("ColorChange")) && (!c.name.equals("+4"))) {
+                output.println("Wunschfarbe ist: " + c.getColor());
+                return c.getColor();
+            }
+        }
+        return Colors.R;
+    }
 }

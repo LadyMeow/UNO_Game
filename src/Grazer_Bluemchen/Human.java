@@ -56,12 +56,16 @@ public class Human extends Player{
         colorWish = input.next();
 
         if(colorWish.equalsIgnoreCase("R")) {
+            output.println("Ich wünsche mir rot!");
             return Colors.R;
         } else if (colorWish.equalsIgnoreCase("B")) {
+            output.println("Ich wünsche mir blau!");
             return Colors.B;
         } else if (colorWish.equalsIgnoreCase("Y")) {
+            output.println("Ich wünsche mir gelb!");
             return Colors.Y;
         } else if (colorWish.equalsIgnoreCase("G")) {
+            output.println("Ich wünsche mir grün!");
             return Colors.G;
         } else {
             output.println("Diese Farbe ist nicht gültig!");

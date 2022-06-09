@@ -55,7 +55,7 @@ public class UNOApp {
         topCard = deck.discardpile.get(0);
 
         // nachzählen, ob gesamt 108 Karten sind!
-        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
+        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards())); // details!
 
         // name eingeben
         int botNumber = 1;
@@ -105,7 +105,7 @@ public class UNOApp {
         if (playedCard == null) {
             output.println("Du hast keine Karte gespielt, der Nächste ist dran!");
         } else {
-            output.println("Du hast Karte: " + playedCard + " gespielt. Der Nächste Spieler ist dran!");
+            output.println("Du hast Karte: " + playedCard + " gespielt.");
         }
     }
 
@@ -137,6 +137,14 @@ public class UNOApp {
                 output.println("Richtungswechsel!");
             } else if (valid == 5) { // ColorChange Card
                 colorWish = currentPlayer.chooseColor();
+                playedCard.setColor(colorWish); // wir müssen testen ob colorchange card beim zweiten Einsatz auch funktioniert!
+                output.println("Der nächste Spieler ist dran.");
+            } else if (valid == 6) { // +4
+                colorWish = currentPlayer.chooseColor();
+                playedCard.setColor(colorWish);
+                output.println("Der nächste Spieler ist dran.");
+                allPlayers.getPlayer(currentPlayerNumber).handCards.addAll(deck.dealCards(4));
+                output.println("Du hast 4 Karten bekommen!!");
             }
 
             // move cards
@@ -170,6 +178,9 @@ public class UNOApp {
         //TODO: Ausgabe des aktuellen Zustands
         // der Spieler der gerade dran ist: sieht handCards
 
+        // Karten zählen
+        cardStatus();
+
         // print handCards from currentPlayer
         System.out.print(currentPlayer.getName() + ": ");
         currentPlayer.printHandCards();
@@ -186,6 +197,17 @@ public class UNOApp {
     // Hilfe anzeigen
     // aktuelle Punkte
     // uno rufen
+
+    public void cardStatus() {
+        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
+        System.out.println("Discard Pile: " + deck.discardpile.size());
+        System.out.println("Draw Pile: " + deck.drawpile.size());
+        System.out.println("current Player: " + currentPlayer + ": " + currentPlayer.handCards.size());
+        System.out.println(allPlayers.getPlayer(0) + ": " + allPlayers.getPlayer(0).handCards.size());
+        System.out.println(allPlayers.getPlayer(1) + ": " + allPlayers.getPlayer(1).handCards.size());
+        System.out.println(allPlayers.getPlayer(2) + ": " + allPlayers.getPlayer(2).handCards.size());
+        System.out.println(allPlayers.getPlayer(3) + ": " + allPlayers.getPlayer(3).handCards.size());
+    }
 
 }
 
