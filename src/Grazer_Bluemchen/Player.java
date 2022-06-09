@@ -39,6 +39,9 @@ public abstract class Player {
     // play Card if possible
     public abstract Card playIfPossible();
 
+    // ColorWish
+    public abstract Colors chooseColor();
+
 
     @Override
     public String toString() {

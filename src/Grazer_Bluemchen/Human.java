@@ -49,4 +49,26 @@ public class Human extends Player{
         }
     }
 
+    @Override
+    public Colors chooseColor() {
+        String colorWish;
+        output.println("Welche Farbe wünschst du dir? (R, B, Y, G)");
+        colorWish = input.next();
+
+        if(colorWish.equalsIgnoreCase("R")) {
+            return Colors.R;
+        } else if (colorWish.equalsIgnoreCase("B")) {
+            return Colors.B;
+        } else if (colorWish.equalsIgnoreCase("Y")) {
+            return Colors.Y;
+        } else if (colorWish.equalsIgnoreCase("G")) {
+            return Colors.G;
+        } else {
+            output.println("Diese Farbe ist nicht gültig!");
+            chooseColor();
+        }
+
+        return null;
+    }
+
 }

@@ -33,11 +33,7 @@ public class CardDeck {
         if (playedCard.name.toLowerCase().contains("skip")) {
             validation = 4;
         }
-        // special Cards kommen zuerst
-
-
-
-        if (playedCard.name.equals("ColorChange") || playedCard.name.equals("+4")) {
+        if (playedCard.name.toLowerCase().contains("colorchange")) {
             validation = 5;
         }
 

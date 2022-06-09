@@ -14,6 +14,7 @@ public class UNOApp {
     private Card topCard;
     private Card playedCard;
     private boolean direction = true; // im Uhrzeigersinn
+    private Colors colorWish;
 
     // constructor
     public UNOApp(Scanner input, PrintStream output) {
@@ -134,6 +135,8 @@ public class UNOApp {
             } else if (valid == 3) { // Reverse Card
                 direction = !direction;
                 output.println("Richtungswechsel!");
+            } else if (valid == 5) { // ColorChange Card
+                colorWish = currentPlayer.chooseColor();
             }
 
             // move cards
