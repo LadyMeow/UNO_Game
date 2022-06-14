@@ -86,10 +86,10 @@ public class CardDeck {
         // 1-9er cards and actioncards
         for (int i = 0; i < 2; i++) {
             for (Colors co : Colors.values()) {
-                for (int j = 1; j <= 9; j++) {
-                    Card c = new Card(co, j);
-                    drawpile.add(c);
-                }
+//                for (int j = 1; j <= 9; j++) {
+//                    Card c = new Card(co, j);
+//                    drawpile.add(c);
+//                }
                 Card c1 = new Card(co, "+2");
                 Card c2 = new Card(co, "Reverse");
                 Card c3 = new Card(co, "Skip");

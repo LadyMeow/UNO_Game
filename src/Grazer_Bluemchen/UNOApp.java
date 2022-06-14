@@ -78,9 +78,9 @@ public class UNOApp {
 
 
         if (topCard.name.contains("Skip")) { // vorher topCard und handcards printen
+            output.println("Der erste Spieler: " + currentPlayer + " muss aussetzen!");
             currentPlayerNumber++;
             currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
-            output.println("Der erste Spieler: " + currentPlayer + " muss aussetzen!");
         } else if (topCard.name.contains("+2")) {
             currentPlayer.handCards.addAll(deck.dealCards(2));
             output.println("Du hast 2 Karten bekommen!!");
@@ -124,12 +124,55 @@ public class UNOApp {
             }
         }
 
+//        if (playedCard == null) {
+//            output.println("Du hast keine Karte gespielt, der Nächste ist dran!");
+//        } else {
+//            output.println("Du hast Karte: " + playedCard + " gespielt.");
+//            // UNO prüfen
+//            if (currentPlayer.handCards.size() == 2) {
+//                if (currentPlayer.uno) {
+//                    output.println(currentPlayer + " hat UNO gesagt!");
+//                    currentPlayer.uno = false;
+//                } else {
+//                    output.println("Du hast nicht UNO gesagt! Und bekommst 2 Strafkarten!");
+//                    currentPlayer.handCards.addAll(deck.dealCards(2));
+//                }
+//            }
+//        }
+    }
+
+    private void updateState() {
+        //TODO: Benutzereingaben verarbeiten
+        // ist Karte gültig?
+        // wenn ja, nächster Spieler
+
+
+        CardType valid = checkValidation();
+        if(valid == CardType.INVALID) {
+            return;
+        }
+
+        // move cards
+        if (valid != null) {
+            currentPlayer.removeHandCard(playedCard); // remove from handCards
+            deck.addCardToDiscard(playedCard); // add to discardpile
+            topCard = playedCard; // topCard aktualisiert
+        }
+
+        // 0 Cards check - gewonnen?
+        if (currentPlayer.handCards.size() == 0) {
+            output.println(currentPlayer + " du hast gewonnen!");
+            exit = true;
+            return;
+        }
+
+        // Textausgabe und UNO prüfen
         if (playedCard == null) {
             output.println("Du hast keine Karte gespielt, der Nächste ist dran!");
         } else {
             output.println("Du hast Karte: " + playedCard + " gespielt.");
             // UNO prüfen
-            if (currentPlayer.handCards.size() == 2) {
+            if (currentPlayer.handCards.size() == 1) {
                 if (currentPlayer.uno) {
                     output.println(currentPlayer + " hat UNO gesagt!");
                     currentPlayer.uno = false;
@@ -139,77 +182,21 @@ public class UNOApp {
                 }
             }
         }
-    }
 
-    private void updateState() {
-        //TODO: Benutzereingaben verarbeiten
-        // ist Karte gültig?
-        // wenn ja, nächster Spieler
-
-        int nextPlayerIndex = allPlayers.nextPlayer(direction, currentPlayerNumber) - 1;
-
-        // Card valid? - boolean
-        // -1: not valid card, 0: no card played (only picked a card), 1: valid card played
-        // 2: +2, 3: reverse, 4: skip
-        // 5: special card was played (Farbwunsch)
-
-        if (playedCard != null) {
-            CardType valid = deck.checkCard(playedCard);
-
-            // check if valid or action or special
-            if (valid == CardType.INVALID) {
-                output.println("Diese Karte ist nicht gültig!");
-                return;
-            } else if (valid == CardType.NORMAL) {
-                output.println("nächster Spieler ist dran");
-            } else if (valid == CardType.PLUS_TWO) {
-                allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(2));
-                output.println("Du hast 2 Karten bekommen!!");
-            } else if (valid == CardType.REVERSE) {
-                direction = !direction;
-                output.println("Richtungswechsel!");
-            } else if (valid == CardType.COLORCHANGE) {
-                colorWish = currentPlayer.chooseColor();
-                playedCard.setColor(colorWish); // wir müssen testen ob colorchange card beim zweiten Einsatz auch funktioniert!
-                output.println("Der nächste Spieler ist dran.");
-            } else if (valid == CardType.PLUS_FOUR) {
-                colorWish = currentPlayer.chooseColor();
-                playedCard.setColor(colorWish);
-                output.println("Der nächste Spieler ist dran.");
-                allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(4));
-                output.println("Du hast 4 Karten bekommen!!");
-            }
-
-            // move cards
-            if (valid != CardType.INVALID) {
-                currentPlayer.removeHandCard(playedCard); // remove from handCards
-                deck.addCardToDiscard(playedCard); // add to discardpile
-                topCard = playedCard; // topCard aktualisiert
-            }
-
-            // 0 Cards check - gewonnen?
-            if (currentPlayer.handCards.size() == 0) {
-                output.println(currentPlayer + " du hast gewonnen!");
-                exit = true;
-                return;
-            }
-
-            if (valid == CardType.SKIP) {
-                currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
-                currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
-                output.println(currentPlayer + ": du musst aussetzen!");
-            }
-
+        if (valid == CardType.SKIP) {
+            currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
+            currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+            output.println(currentPlayer + ": du musst aussetzen!");
         }
 
-        // Player Reihenfolge:
-        currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
-        currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+    // Player Reihenfolge:
+    currentPlayerNumber =allPlayers.nextPlayer(direction,currentPlayerNumber);
+    currentPlayer =allPlayers.getPlayer(currentPlayerNumber -1);
 
-        // nachzählen, ob gesamt 108 Karten sind!
-        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
+    // nachzählen, ob gesamt 108 Karten sind!
+        System.out.println("Karten im Spiel: "+(deck.discardpile.size()+deck.drawpile.size()+allPlayers.countAllPlayerCards()));
 
-    }
+}
 
     private void printState() {
         //TODO: Ausgabe des aktuellen Zustands
@@ -250,6 +237,38 @@ public class UNOApp {
         System.out.println(allPlayers.getPlayer(1) + ": " + allPlayers.getPlayer(1).handCards.size());
         System.out.println(allPlayers.getPlayer(2) + ": " + allPlayers.getPlayer(2).handCards.size());
         System.out.println(allPlayers.getPlayer(3) + ": " + allPlayers.getPlayer(3).handCards.size());
+    }
+
+    public CardType checkValidation() {
+        int nextPlayerIndex = allPlayers.nextPlayer(direction, currentPlayerNumber) - 1;
+        CardType valid = null;
+
+        if (playedCard != null) {
+            valid = deck.checkCard(playedCard);
+            // check if valid or action or special
+            if (valid == CardType.INVALID) {
+                output.println("Diese Karte ist nicht gültig!");
+            } else if (valid == CardType.NORMAL) {
+
+            } else if (valid == CardType.PLUS_TWO) {
+                allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(2));
+                output.println("Du hast 2 Karten bekommen!!");
+            } else if (valid == CardType.REVERSE) {
+                direction = !direction;
+                output.println("Richtungswechsel!");
+            } else if (valid == CardType.COLORCHANGE) {
+                colorWish = currentPlayer.chooseColor();
+                playedCard.setColor(colorWish); // wir müssen testen ob colorchange card beim zweiten Einsatz auch funktioniert!
+                output.println("Der nächste Spieler ist dran.");
+            } else if (valid == CardType.PLUS_FOUR) {
+                colorWish = currentPlayer.chooseColor();
+                playedCard.setColor(colorWish);
+                output.println("Der nächste Spieler ist dran.");
+                allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(4));
+                output.println("Du hast 4 Karten bekommen!!");
+            }
+        }
+        return valid;
     }
 
 }
