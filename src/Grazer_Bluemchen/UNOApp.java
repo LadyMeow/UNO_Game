@@ -154,9 +154,7 @@ public class UNOApp {
 
         // move cards
         if (valid != null) {
-            currentPlayer.removeHandCard(playedCard); // remove from handCards
-            deck.addCardToDiscard(playedCard); // add to discardpile
-            topCard = playedCard; // topCard aktualisiert
+            moveCards();
         }
 
         // 0 Cards check - gewonnen?
@@ -195,7 +193,6 @@ public class UNOApp {
 
     // nachzählen, ob gesamt 108 Karten sind!
         System.out.println("Karten im Spiel: "+(deck.discardpile.size()+deck.drawpile.size()+allPlayers.countAllPlayerCards()));
-
 }
 
     private void printState() {
@@ -269,6 +266,12 @@ public class UNOApp {
             }
         }
         return valid;
+    }
+
+    public void moveCards() {
+            currentPlayer.removeHandCard(playedCard); // remove from handCards
+            deck.addCardToDiscard(playedCard); // add to discardpile
+            topCard = playedCard; // topCard aktualisiert
     }
 
 }
