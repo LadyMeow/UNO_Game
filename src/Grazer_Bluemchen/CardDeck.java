@@ -13,31 +13,31 @@ public class CardDeck {
         discardpile = new ArrayList<>();
     }
 
-    public int checkCard(Card playedCard) {
-        int validation = -1;
+    public CardType checkCard(Card playedCard) {
+        CardType validation = CardType.INVALID;
 
         Card topCard = discardpile.get(discardpile.size() - 1);
 
         if (playedCard.getColor() == topCard.getColor()) {
-            validation = 1;
+            validation = CardType.NORMAL;
         }
         if (playedCard.getValue() == topCard.getValue() && (topCard.getValue() >= 0)) { // special und action cards value = -1!!
-            validation = 1;
+            validation = CardType.NORMAL;
         }
         if (playedCard.name.contains("+2") && ((topCard.getColor() == playedCard.getColor()) || topCard.name.contains("+2"))) {
-            validation = 2;
+            validation = CardType.PLUS_TWO;
         }
         if (playedCard.name.toLowerCase().contains("reverse") && ((topCard.getColor() == playedCard.getColor()) || topCard.name.contains("Reverse"))) {
-            validation = 3;
+            validation = CardType.REVERSE;
         }
         if (playedCard.name.toLowerCase().contains("skip") && ((topCard.getColor() == playedCard.getColor()) || topCard.name.contains("Skip"))) {
-            validation = 4;
+            validation = CardType.SKIP;
         }
         if (playedCard.name.toLowerCase().contains("colorchange")) {
-            validation = 5;
+            validation = CardType.COLORCHANGE;
         }
         if (playedCard.name.contains("+4")) {
-            validation = 6;
+            validation = CardType.PLUS_FOUR;
         }
         return validation;
     }
@@ -116,7 +116,7 @@ public class CardDeck {
 
     // discardpile takes 1 card of drawpile (index 0)
     public CardDeck addToDiscardPile() {
-        if(drawpile.get(0).name.contains("+4")) {
+        while(drawpile.get(0).name.contains("+4")) {
             shuffle();
         }
         discardpile.add(drawpile.get(0));

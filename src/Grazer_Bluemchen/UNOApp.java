@@ -154,26 +154,25 @@ public class UNOApp {
         // 5: special card was played (Farbwunsch)
 
         if (playedCard != null) {
-            int valid = 0;
-            valid = deck.checkCard(playedCard);
+            CardType valid = deck.checkCard(playedCard);
 
             // check if valid or action or special
-            if (valid == -1) { // no valid Card
+            if (valid == CardType.INVALID) {
                 output.println("Diese Karte ist nicht gültig!");
                 return;
-            } else if (valid == 0) { // normal Card
+            } else if (valid == CardType.NORMAL) {
                 output.println("nächster Spieler ist dran");
-            } else if (valid == 2) { // +2 Card
+            } else if (valid == CardType.PLUS_TWO) {
                 allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(2));
                 output.println("Du hast 2 Karten bekommen!!");
-            } else if (valid == 3) { // Reverse Card
+            } else if (valid == CardType.REVERSE) {
                 direction = !direction;
                 output.println("Richtungswechsel!");
-            } else if (valid == 5) { // ColorChange Card
+            } else if (valid == CardType.COLORCHANGE) {
                 colorWish = currentPlayer.chooseColor();
                 playedCard.setColor(colorWish); // wir müssen testen ob colorchange card beim zweiten Einsatz auch funktioniert!
                 output.println("Der nächste Spieler ist dran.");
-            } else if (valid == 6) { // +4
+            } else if (valid == CardType.PLUS_FOUR) {
                 colorWish = currentPlayer.chooseColor();
                 playedCard.setColor(colorWish);
                 output.println("Der nächste Spieler ist dran.");
@@ -182,7 +181,7 @@ public class UNOApp {
             }
 
             // move cards
-            if (valid > 0) {
+            if (valid != CardType.INVALID) {
                 currentPlayer.removeHandCard(playedCard); // remove from handCards
                 deck.addCardToDiscard(playedCard); // add to discardpile
                 topCard = playedCard; // topCard aktualisiert
@@ -195,7 +194,7 @@ public class UNOApp {
                 return;
             }
 
-            if (valid == 4) { // Skip Card
+            if (valid == CardType.SKIP) {
                 currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
                 currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
                 output.println(currentPlayer + ": du musst aussetzen!");
