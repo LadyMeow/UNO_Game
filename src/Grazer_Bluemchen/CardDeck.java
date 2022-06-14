@@ -78,8 +78,8 @@ public class CardDeck {
         System.out.println();
     }
 
-    public int countCards() {
-        return drawpile.size();
+    public int countCards(ArrayList<Card> pile) {
+        return pile.size();
     }
 
     public void createDrawPile() {

@@ -41,7 +41,7 @@ public class UNOApp {
 
         // frage: bot oder mensch?
         output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
-        int botCount = input.nextInt();
+        int botCount = Integer.parseInt(input.nextLine());
         for (int i = 0; i < 4 - botCount; i++) { // zuerst Humans erstellen
             allPlayers.addPlayer(new Human(input, output));
         }
@@ -58,8 +58,8 @@ public class UNOApp {
         for (Player p : allPlayers.allPlayer) {
             if (p instanceof Human) {
                 output.println("Write your name: ");
-                p.setName(input.next());
-                p.handCards = deck.dealCards(1);
+                p.setName(input.nextLine());
+                p.handCards = deck.dealCards(2);
             } else {
                 p.setName("Bot" + botNumber);
                 botNumber++;
@@ -107,6 +107,8 @@ public class UNOApp {
             if (playedCard == null) {
                 currentPlayer.handCards.addAll(deck.dealCards(1)); // bot hebt 1 card ab
                 return;
+            } else if (currentPlayer.handCards.size() == 2) {
+                output.println(currentPlayer + " hat UNO gesagt!");
             }
         } else { // Spieler legt Karte
             // wenn Eingabe h: eine Karte heben
@@ -126,6 +128,16 @@ public class UNOApp {
             output.println("Du hast keine Karte gespielt, der Nächste ist dran!");
         } else {
             output.println("Du hast Karte: " + playedCard + " gespielt.");
+            // UNO prüfen
+            if (currentPlayer.handCards.size() == 2) {
+                if (currentPlayer.uno) {
+                    output.println(currentPlayer + " hat UNO gesagt!");
+                    currentPlayer.uno = false;
+                } else {
+                    output.println("Du hast nicht UNO gesagt! Und bekommst 2 Strafkarten!");
+                    currentPlayer.handCards.addAll(deck.dealCards(2));
+                }
+            }
         }
     }
 
@@ -176,25 +188,21 @@ public class UNOApp {
                 topCard = playedCard; // topCard aktualisiert
             }
 
+            // 0 Cards check - gewonnen?
+            if (currentPlayer.handCards.size() == 0) {
+                output.println(currentPlayer + " du hast gewonnen!");
+                exit = true;
+                return;
+            }
+
             if (valid == 4) { // Skip Card
                 currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
                 currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
                 output.println(currentPlayer + ": du musst aussetzen!");
             }
 
-            // nach Farbwunsch fragen
-            // als Variable speichern (Enum)
-
-            // 0 Cards check
-            if(currentPlayer.handCards.size() == 0) {
-                output.println(currentPlayer + " du hast gewonnen!");
-                exit = true;
-                return;
-            }
-
         }
 
-        // random start player in constructor anpassen??
         // Player Reihenfolge:
         currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
         currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
@@ -209,7 +217,7 @@ public class UNOApp {
         // der Spieler der gerade dran ist: sieht handCards
 
         // wenn Runde gewonnen wurde
-        if(exit) {
+        if (exit) {
             allPlayers.allPlayer.clear();
             deck.drawpile.clear();
             deck.discardpile.clear();
@@ -229,10 +237,6 @@ public class UNOApp {
         deck.printDiscardPile();
 
     }
-
-    // kommandos:
-    // gültiger Name einer Karte
-    // karte abheben
 
     // Hilfe anzeigen
     // aktuelle Punkte

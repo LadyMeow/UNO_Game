@@ -9,7 +9,7 @@ public class Main {
         UNOApp app = new UNOApp(input, System.out);
         app.Run();
 
-        if(input.next().equalsIgnoreCase("j")) {
+        while (input.nextLine().equalsIgnoreCase("j")) {
             app.Run();
         }
 

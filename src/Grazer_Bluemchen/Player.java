@@ -10,11 +10,13 @@ public abstract class Player {
     public ArrayList<Card> handCards;
     protected final Scanner input;
     protected final PrintStream output;
+    protected boolean uno;
 
     public Player(Scanner input, PrintStream output) {
         handCards = new ArrayList<>();
         this.input = input;
         this.output = output;
+        this.uno = false;
     }
 
     public void addHandCards(ArrayList<Card> a) {
