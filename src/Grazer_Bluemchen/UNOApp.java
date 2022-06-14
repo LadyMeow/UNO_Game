@@ -36,6 +36,9 @@ public class UNOApp {
     }
 
     private void initialize() { // wenn keine Zahl von 0-3 eingegeben wird -crush!!
+        // Neue Runde
+        exit = false;
+
         // frage: bot oder mensch?
         output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
         int botCount = input.nextInt();
@@ -56,7 +59,7 @@ public class UNOApp {
             if (p instanceof Human) {
                 output.println("Write your name: ");
                 p.setName(input.next());
-                p.handCards = deck.dealCards(7);
+                p.handCards = deck.dealCards(1);
             } else {
                 p.setName("Bot" + botNumber);
                 botNumber++;
@@ -73,7 +76,8 @@ public class UNOApp {
         deck.addToDiscardPile();
         topCard = deck.discardpile.get(0);
 
-        if (topCard.name.contains("Skip")) {
+
+        if (topCard.name.contains("Skip")) { // vorher topCard und handcards printen
             currentPlayerNumber++;
             currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
             output.println("Der erste Spieler: " + currentPlayer + " muss aussetzen!");
@@ -82,7 +86,11 @@ public class UNOApp {
             output.println("Du hast 2 Karten bekommen!!");
         } else if (topCard.name.contains("Reverse")) {
             direction = false;
+            output.println("Richtungswechsel!");
         } else if (topCard.name.equals("ColorChange")) {
+            deck.printDiscardPile();
+            output.print(currentPlayer.getName() + ": ");
+            currentPlayer.printHandCards();
             colorWish = currentPlayer.chooseColor();
             topCard.setColor(colorWish);
         }
@@ -176,6 +184,14 @@ public class UNOApp {
 
             // nach Farbwunsch fragen
             // als Variable speichern (Enum)
+
+            // 0 Cards check
+            if(currentPlayer.handCards.size() == 0) {
+                output.println(currentPlayer + " du hast gewonnen!");
+                exit = true;
+                return;
+            }
+
         }
 
         // random start player in constructor anpassen??
@@ -192,12 +208,22 @@ public class UNOApp {
         //TODO: Ausgabe des aktuellen Zustands
         // der Spieler der gerade dran ist: sieht handCards
 
+        // wenn Runde gewonnen wurde
+        if(exit) {
+            allPlayers.allPlayer.clear();
+            deck.drawpile.clear();
+            deck.discardpile.clear();
+            currentPlayerNumber = (int) (Math.random() * (4 - 1)) + 1;
+            output.println("Neue Runde? (J/N)");
+            return;
+        }
+
         // Karten zählen
         cardStatus();
 
         // print handCards from currentPlayer
-        System.out.print(currentPlayer.getName() + ": ");
-        currentPlayer.printHandCards();
+        output.print(currentPlayer.getName() + ": ");
+        currentPlayer.printHandCards(); // Methode anpassen, dass currentPlayer mit ausgegeben wird
 
         // erste Karte wird aufgedeckt
         deck.printDiscardPile();

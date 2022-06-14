@@ -8,6 +8,11 @@ public class Main {
         Scanner input = new Scanner(System.in);
         UNOApp app = new UNOApp(input, System.out);
         app.Run();
+
+        if(input.next().equalsIgnoreCase("j")) {
+            app.Run();
+        }
+
         input.close();
         System.out.println("Das Programm wird beendet ...");
 
