@@ -3,7 +3,7 @@ package Grazer_Bluemchen;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class Human extends Player{
+public class Human extends Player {
 
     public Human(Scanner input, PrintStream output) {
         super(input, output);
@@ -15,13 +15,13 @@ public class Human extends Player{
             output.println("Spiele eine deiner Karten oder hebe eine Karte (mit k): ");
             String playCard = input.nextLine();
 
-            if(playCard.toLowerCase().contains("uno")) {
+            if (playCard.toLowerCase().contains("uno")) {
                 uno = true;
                 playCard = playCard.replace(" uno", "");
             }
 
             // abheben & Karte Spielen noch möglich!
-            if(playCard.equalsIgnoreCase("k")) {
+            if (playCard.equalsIgnoreCase("k")) {
                 return null;
             }
 
@@ -36,12 +36,12 @@ public class Human extends Player{
 
     @Override
     public Card playIfPossible() {
-        while(true) {
+        while (true) {
             output.println("Welche Karte willst du spielen? Wenn keine Karte passt, schreibe W für weiter!");
 
             String playCard = input.nextLine();
 
-            if(playCard.toLowerCase().contains("uno")) {
+            if (playCard.toLowerCase().contains("uno")) {
                 uno = true;
                 playCard = playCard.replace(" uno", "");
             }
@@ -65,7 +65,7 @@ public class Human extends Player{
         output.println("Welche Farbe wünschst du dir? (R, B, Y, G)");
         colorWish = input.nextLine();
 
-        if(colorWish.equalsIgnoreCase("R")) {
+        if (colorWish.equalsIgnoreCase("R")) {
             output.println("Ich wünsche mir rot!");
             return Colors.R;
         } else if (colorWish.equalsIgnoreCase("B")) {
@@ -83,6 +83,17 @@ public class Human extends Player{
         }
 
         return null;
+    }
+
+    public boolean checkContest(Card topCard) {
+        for (Card c : handCards) {
+            if (c.name.equals("ColorChange") || c.name.equals("+4")) {
+
+            } else if (c.getColor() == topCard.getColor()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

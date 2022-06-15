@@ -45,6 +45,24 @@ public class AllPlayers {
         return currentPlayerNumber;
     }
 
+    public int prevPlayer(boolean direction, int currentPlayerNumber) {
+        if(direction) { // if true
+            if (currentPlayerNumber > 1) {
+                currentPlayerNumber--;
+            } else {
+                currentPlayerNumber = 1;
+            }
+        } else {
+            if (currentPlayerNumber < 4) {
+                currentPlayerNumber++;
+            } else {
+                currentPlayerNumber = 4;
+            }
+        }
+
+        return currentPlayerNumber;
+    }
+
     @Override
     public String toString() {
         return "AllPlayers{" +

@@ -59,7 +59,7 @@ public class UNOApp {
             if (p instanceof Human) {
                 output.println("Write your name: ");
                 p.setName(input.nextLine());
-                p.handCards = deck.dealCards(2);
+                p.handCards = deck.dealCards(7);
             } else {
                 p.setName("Bot" + botNumber);
                 botNumber++;
@@ -123,22 +123,6 @@ public class UNOApp {
                 playedCard = currentPlayer.playIfPossible();
             }
         }
-
-//        if (playedCard == null) {
-//            output.println("Du hast keine Karte gespielt, der Nächste ist dran!");
-//        } else {
-//            output.println("Du hast Karte: " + playedCard + " gespielt.");
-//            // UNO prüfen
-//            if (currentPlayer.handCards.size() == 2) {
-//                if (currentPlayer.uno) {
-//                    output.println(currentPlayer + " hat UNO gesagt!");
-//                    currentPlayer.uno = false;
-//                } else {
-//                    output.println("Du hast nicht UNO gesagt! Und bekommst 2 Strafkarten!");
-//                    currentPlayer.handCards.addAll(deck.dealCards(2));
-//                }
-//            }
-//        }
     }
 
     private void updateState() {
@@ -168,7 +152,7 @@ public class UNOApp {
         if (playedCard == null) {
             output.println("Du hast keine Karte gespielt, der Nächste ist dran!");
         } else {
-            output.println("Du hast Karte: " + playedCard + " gespielt.");
+            output.println(currentPlayer + " hat Karte: " + playedCard + " gespielt.");
             // UNO prüfen
             if (currentPlayer.handCards.size() == 1) {
                 if (currentPlayer.uno) {
@@ -261,8 +245,7 @@ public class UNOApp {
                 colorWish = currentPlayer.chooseColor();
                 playedCard.setColor(colorWish);
                 output.println("Der nächste Spieler ist dran.");
-                allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(4));
-                output.println("Du hast 4 Karten bekommen!!");
+                contestPlus4();
             }
         }
         return valid;
@@ -272,6 +255,30 @@ public class UNOApp {
             currentPlayer.removeHandCard(playedCard); // remove from handCards
             deck.addCardToDiscard(playedCard); // add to discardpile
             topCard = playedCard; // topCard aktualisiert
+    }
+
+    public void contestPlus4(){
+        int nextPlayerIndex = allPlayers.nextPlayer(direction, currentPlayerNumber) - 1;
+        //int prevPlayerIndex = allPlayers.prevPlayer(direction, currentPlayerNumber) - 1;
+
+        output.println(allPlayers.getPlayer(nextPlayerIndex) + ": willst du die +4 anfechten? (J/N)");
+        if(input.nextLine().equalsIgnoreCase("j")) {
+            output.print(currentPlayer + ": ");
+            currentPlayer.printHandCards();
+
+            if(currentPlayer.checkContest(topCard)) {
+                currentPlayer.handCards.addAll(deck.dealCards(4));
+                output.println(currentPlayer + " hat geschummelt und bekommt 4 Strafkarten!");
+            } else {
+                allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(6));
+                output.println(currentPlayer + " hat NICHT geschummelt! Du bekommst jetzt 6 Strafkarten.");
+            }
+
+        } else {
+            allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(4));
+            output.println(allPlayers.getPlayer(nextPlayerIndex) + " hat 4 Karten bekommen!!");
+        }
+
     }
 
 }

@@ -42,4 +42,16 @@ public class Bot extends Player {
         }
         return Colors.R;
     }
+
+    @Override
+    public boolean checkContest(Card topCard) {
+        for (Card c : handCards) {
+            if (c.name.equals("ColorChange") || c.name.equals("+4")) {
+
+            } else if (c.getColor() == topCard.getColor()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

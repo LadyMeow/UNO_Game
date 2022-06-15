@@ -49,6 +49,9 @@ public abstract class Player {
     // ColorWish
     public abstract Colors chooseColor();
 
+    // check if color in handcards (contest)
+    public abstract boolean checkContest(Card topCard);
+
 
     @Override
     public String toString() {
