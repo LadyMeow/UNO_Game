@@ -1,19 +1,27 @@
 package Grazer_Bluemchen;
 
+import Grazer_Bluemchen.Help.Help;
+
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
 public class Human extends Player {
+    private Help help = new Help();
 
     public Human(Scanner input, PrintStream output) {
         super(input, output);
     }
 
     @Override
-    public Card searchHandCards(Card topCard) {
+    public Card searchHandCards(Card topCard) throws IOException {
         while (true) {
-            output.println("Spiele eine deiner Karten oder hebe eine Karte (mit k): ");
+            output.println("Spiele eine deiner Karten oder hebe eine Karte (mit k). Wenn du Hilfe brachst schreibe h: ");
             String playCard = input.nextLine();
+
+            if(playCard.equalsIgnoreCase("h")) {
+                help.printHelp();
+            }
 
             if (playCard.toLowerCase().contains("uno")) {
                 uno = true;
@@ -35,7 +43,7 @@ public class Human extends Player {
     }
 
     @Override
-    public Card playIfPossible() {
+    public Card playIfPossible(Card topCard) {
         while (true) {
             output.println("Welche Karte willst du spielen? Wenn keine Karte passt, schreibe W für weiter!");
 

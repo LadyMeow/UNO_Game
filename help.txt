@@ -1,0 +1,56 @@
+------------------------------------------------------------------------------------------------------------------------
+*****
+HILFE
+*****
+
+Hier findest du eine Erklärung, wie unser Spiel funktioniert.
+Am Start wählst du aus mit wie vielen Bots du spielen möchtest. Erlaubt sind bis zu 3 Bots.
+Das Spiel hat immer 4 Mitspieler insgesamt.
+
+*****
+STEUERUNG
+*****
+
+- Eingaben beendest du immer mit Enter
+- Um eine Karte zu legen, gibst du den Kartennamen ein, genau so wie sie in deiner Hand benannt sind. 
+  (z.B. R6 für die rote 6)
+- k: Mit "k" für Karte hebst du eine Karte vom Stapel, wenn du keine passende auf der Hand hast.
+- w: Nach dem Heben, kannst du die Karte ausspielen. Wenn sie nicht passt, schreibe "w" für weiter.
+- h: Mit der Eingabe "h" kannst du diese Hilfe öffnen.
+- UNO: Wenn du UNO sagen möchtest, schreibe die Karte, die du spielen willst und dazu UNO (z.B. "G7 UNO").
+- Punkte: Mit der Eingabe "Punkte" kann man den Punktestand aller Spieler ausgeben lassen.
+- J: für Ja
+- N: für Nein
+
+*****
+KARTEN-ARTEN
+*****
+
+Farben: R - rot, B - blau, Y - gelb, G - grün
+
+Normale Karten: Wert 0-9
+
+Aktionskarten:
+Skip - überspringe den nächsten Spieler
+Reverse - Spielrichtung wird geändert
++2 - der nächste Spieler bekommt 2 Karten
+
+Spezialkarten:
+ColorChange - suche dir die Farbe aus, die der nächste Spieler legen soll. Diese Karte kann auf alle Karten gelegt werden
++4 - hier gilt das gleiche wie bei der ColorChange Karte. Zusätzlich bekommt der nächste Spieler 4 Karten.
+     Diese Karte hat noch eine Sonderregel: Ein Spieler, der eine +4 Karte hat, kann bluffen und die Karte
+     "unerlaubt" legen. Wird er jedoch dabei "erwischt" bekommt er selbst 4 Karten. Wenn er nicht "geblufft" hat, bekommt der nächste Spieler 6 Karten.
+	 
+*****
+PUNKTE
+*****
+
+Wenn bei einer Runde ein Spieler keine Karten mehr hat, gewinnt er die Runde und bekommt die Punkte von den Karten der anderen Spieler.
+
+Kartenwerte:
+- normale Karten: Wert der Karte (z.B. B8 = 8 Punkte)
+- Aktionskarten: 20 Punkte
+- Spezialkarten: 50 Punkte
+
+Wenn ein Spieler 500 Punkte erreicht hat, ist das Spiel zu Ende.
+------------------------------------------------------------------------------------------------------------------------

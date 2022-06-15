@@ -28,7 +28,16 @@ public class Bot extends Player {
     }
 
     @Override
-    public Card playIfPossible() {
+    public Card playIfPossible(Card topCard) {
+        Card c = handCards.get(handCards.size()-1);
+
+        if (topCard.getColor() == c.getColor()) {
+            return c;
+        } else if (topCard.getValue() == c.getValue() && (topCard.getValue() >= 0)) {
+            return c;
+        } else if (c.name.equals("ColorChange") || c.name.equals("+4")) {
+            return c;
+        }
         return null;
     }
 

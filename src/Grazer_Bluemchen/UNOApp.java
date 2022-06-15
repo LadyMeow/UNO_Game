@@ -1,5 +1,8 @@
 package Grazer_Bluemchen;
 
+import Grazer_Bluemchen.Help.Help;
+
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
@@ -15,6 +18,7 @@ public class UNOApp {
     private Card playedCard;
     private boolean direction = true; // im Uhrzeigersinn
     private Colors colorWish;
+    private Help help = new Help();
 
     // constructor
     public UNOApp(Scanner input, PrintStream output) {
@@ -24,7 +28,7 @@ public class UNOApp {
     }
 
     // GameLoop
-    public void Run() {
+    public void Run() throws IOException {
         initialize();
         printState();
 
@@ -35,9 +39,12 @@ public class UNOApp {
         }
     }
 
-    private void initialize() { // wenn keine Zahl von 0-3 eingegeben wird -crush!!
+    private void initialize() throws IOException { // wenn keine Zahl von 0-3 eingegeben wird -crush!!
         // Neue Runde
         exit = false;
+
+        // help ausgeben
+        help.printHelp();
 
         // frage: bot oder mensch?
         output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
@@ -57,7 +64,7 @@ public class UNOApp {
         int botNumber = 1;
         for (Player p : allPlayers.allPlayer) {
             if (p instanceof Human) {
-                output.println("Write your name: ");
+                output.println("Schreibe deinen Namen: ");
                 p.setName(input.nextLine());
                 p.handCards = deck.dealCards(7);
             } else {
@@ -72,40 +79,21 @@ public class UNOApp {
         currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
         output.println("Startspieler (wurde zufällig gewählt): " + currentPlayer);
 
-        // discardPile erstellen
-        deck.addToDiscardPile();
-        topCard = deck.discardpile.get(0);
-
-
-        if (topCard.name.contains("Skip")) { // vorher topCard und handcards printen
-            output.println("Der erste Spieler: " + currentPlayer + " muss aussetzen!");
-            currentPlayerNumber++;
-            currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
-        } else if (topCard.name.contains("+2")) {
-            currentPlayer.handCards.addAll(deck.dealCards(2));
-            output.println("Du hast 2 Karten bekommen!!");
-        } else if (topCard.name.contains("Reverse")) {
-            direction = false;
-            output.println("Richtungswechsel!");
-        } else if (topCard.name.equals("ColorChange")) {
-            deck.printDiscardPile();
-            output.print(currentPlayer.getName() + ": ");
-            currentPlayer.printHandCards();
-            colorWish = currentPlayer.chooseColor();
-            topCard.setColor(colorWish);
-        }
+        // DiscardPile erstellen und erste Karte prüfen
+        createDiscardPile();
 
         // nachzählen, ob gesamt 108 Karten sind!
         System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards())); // details!
 
     }
 
-    private void inputPlayer() {
+    private void inputPlayer() throws IOException {
         // Bot legt Karte
         if (currentPlayer instanceof Bot) {
             playedCard = currentPlayer.searchHandCards(topCard);
             if (playedCard == null) {
-                currentPlayer.handCards.addAll(deck.dealCards(1)); // bot hebt 1 card ab
+                currentPlayer.handCards.addAll(deck.dealCards(1)); // Bot hebt 1 card ab
+                currentPlayer.playIfPossible(topCard); // Bot spielt, wenn möglich, die abgehobene Karte
                 return;
             } else if (currentPlayer.handCards.size() == 2) {
                 output.println(currentPlayer + " hat UNO gesagt!");
@@ -120,7 +108,7 @@ public class UNOApp {
                 System.out.print(currentPlayer.getName() + ": ");
                 currentPlayer.printHandCards();
 
-                playedCard = currentPlayer.playIfPossible();
+                playedCard = currentPlayer.playIfPossible(topCard);
             }
         }
     }
@@ -129,24 +117,6 @@ public class UNOApp {
         //TODO: Benutzereingaben verarbeiten
         // ist Karte gültig?
         // wenn ja, nächster Spieler
-
-
-        CardType valid = checkValidation();
-        if(valid == CardType.INVALID) {
-            return;
-        }
-
-        // move cards
-        if (valid != null) {
-            moveCards();
-        }
-
-        // 0 Cards check - gewonnen?
-        if (currentPlayer.handCards.size() == 0) {
-            output.println(currentPlayer + " du hast gewonnen!");
-            exit = true;
-            return;
-        }
 
         // Textausgabe und UNO prüfen
         if (playedCard == null) {
@@ -163,6 +133,23 @@ public class UNOApp {
                     currentPlayer.handCards.addAll(deck.dealCards(2));
                 }
             }
+        }
+
+        CardType valid = checkValidation();
+        if(valid == CardType.INVALID) {
+            return;
+        }
+
+        // move cards
+        if (valid != null) {
+            moveCards();
+        }
+
+        // 0 Cards check - gewonnen?
+        if (currentPlayer.handCards.size() == 0) {
+            output.println(currentPlayer + " du hast gewonnen!");
+            exit = true;
+            return;
         }
 
         if (valid == CardType.SKIP) {
@@ -218,6 +205,31 @@ public class UNOApp {
         System.out.println(allPlayers.getPlayer(1) + ": " + allPlayers.getPlayer(1).handCards.size());
         System.out.println(allPlayers.getPlayer(2) + ": " + allPlayers.getPlayer(2).handCards.size());
         System.out.println(allPlayers.getPlayer(3) + ": " + allPlayers.getPlayer(3).handCards.size());
+    }
+
+    public void createDiscardPile() {
+        // discardPile erstellen
+        deck.addToDiscardPile();
+        topCard = deck.discardpile.get(0);
+
+        // check first Card
+        if (topCard.name.contains("Skip")) { // vorher topCard und handcards printen
+            output.println("Der erste Spieler: " + currentPlayer + " muss aussetzen!");
+            currentPlayerNumber++;
+            currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+        } else if (topCard.name.contains("+2")) {
+            currentPlayer.handCards.addAll(deck.dealCards(2));
+            output.println(currentPlayer + " hat 2 Karten bekommen!!");
+        } else if (topCard.name.contains("Reverse")) {
+            direction = false;
+            output.println("Richtungswechsel!");
+        } else if (topCard.name.equals("ColorChange")) {
+            deck.printDiscardPile();
+            output.print(currentPlayer.getName() + ": ");
+            currentPlayer.printHandCards();
+            colorWish = currentPlayer.chooseColor();
+            topCard.setColor(colorWish);
+        }
     }
 
     public CardType checkValidation() {

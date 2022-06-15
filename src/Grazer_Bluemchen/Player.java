@@ -1,5 +1,6 @@
 package Grazer_Bluemchen;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -41,10 +42,10 @@ public abstract class Player {
     }
 
     // searchCards (only Bot)
-    public abstract Card searchHandCards(Card topCard);
+    public abstract Card searchHandCards(Card topCard) throws IOException;
 
     // play Card if possible
-    public abstract Card playIfPossible();
+    public abstract Card playIfPossible(Card topCard);
 
     // ColorWish
     public abstract Colors chooseColor();
