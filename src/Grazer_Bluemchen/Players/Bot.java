@@ -8,8 +8,6 @@ import java.util.Scanner;
 
 public class Bot extends Player {
 
-    // attribut niveau (evtl. before foreach in searchHandCards - sort cards by points)
-
     public Bot(Scanner input, PrintStream output) {
         super(input, output);
     }
@@ -52,6 +50,11 @@ public class Bot extends Player {
             }
         }
         return Colors.R;
+    }
+
+    @Override
+    public int contestPlus4(Player nextPlayer, Card topCard) {
+        return 0;
     }
 
     @Override

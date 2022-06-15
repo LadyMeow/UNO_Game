@@ -70,18 +70,6 @@ public class CardDeck {
         return handCards;
     }
 
-    // method: print all card names
-    public void printAllCards() {
-        for (Card c : drawpile) {
-            System.out.print(c.getName() + " ");
-        }
-        System.out.println();
-    }
-
-    public int countCards(ArrayList<Card> pile) {
-        return pile.size();
-    }
-
     public void createDrawPile() {
         // 1-9er cards and actioncards
         for (int i = 0; i < 2; i++) {

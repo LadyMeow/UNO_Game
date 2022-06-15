@@ -95,6 +95,24 @@ public class Human extends Player {
         return null;
     }
 
+    public int contestPlus4(Player nextPlayer, Card topCard) {
+        output.println(nextPlayer + ": willst du die +4 anfechten? (J/N)");
+
+        if (input.nextLine().equalsIgnoreCase("j")) {
+            output.print(getName() + ": ");
+            printHandCards();
+
+            if (checkContest(topCard)) {
+                output.println(getName() + " hat geschummelt und bekommt 4 Strafkarten!");
+                return 1;
+            } else if(!checkContest(topCard)) {
+                output.println(getName() + " hat NICHT geschummelt! Du bekommst jetzt 6 Strafkarten.");
+                return 2;
+            }
+        }
+        return 0;
+    }
+
     public boolean checkContest(Card topCard) {
         for (Card c : handCards) {
             if (c.getName().equals("ColorChange") || c.getName().equals("+4")) {

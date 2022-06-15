@@ -47,51 +47,29 @@ public class UNOApp {
         }
     }
 
-    private void initialize() throws IOException { // wenn keine Zahl von 0-3 eingegeben wird -crush!!
+    private void initialize() throws IOException {
         // Neue Runde
         exit = false;
 
         // help ausgeben
         help.printHelp();
 
-        // frage: bot oder mensch?
-        output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
-        int botCount = Integer.parseInt(input.nextLine());
-        for (int i = 0; i < 4 - botCount; i++) { // zuerst Humans erstellen
-            allPlayers.addPlayer(new Human(input, output));
-        }
-        for (int i = 0; i < botCount; i++) { // dann Bots
-            allPlayers.addPlayer(new Bot(input, output));
-        }
+        // Anzahl Bots und Menschen erstellen?
+        createPlayer();
 
         // drawPile erstellen
         deck.createDrawPile();
         deck.shuffle();
 
         // name eingeben
-        int botNumber = 1;
-        for (Player p : allPlayers.allPlayer) {
-            if (p instanceof Human) {
-                output.println("Schreibe deinen Namen: ");
-                p.setName(input.nextLine());
-                p.handCards = deck.dealCards(7);
-            } else {
-                p.setName("Bot" + botNumber);
-                botNumber++;
-                p.handCards = deck.dealCards(7);
-                System.out.println(p.getName());
-            }
-        }
+        namePlayers();
 
-        //CurrentPlayer initialize (damit direkt auf Player zugegriffen werden kann)
+        //CurrentPlayer initialize + print
         currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
         output.println("Startspieler (wurde zufällig gewählt): " + currentPlayer);
 
         // DiscardPile erstellen und erste Karte prüfen
         createDiscardPile();
-
-//        // nachzählen, ob gesamt 108 Karten sind!
-//        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards())); // details!
 
     }
 
@@ -144,7 +122,7 @@ public class UNOApp {
         }
 
         CardType valid = checkValidation();
-        if(valid == CardType.INVALID) {
+        if (valid == CardType.INVALID) {
             return;
         }
 
@@ -166,13 +144,13 @@ public class UNOApp {
             output.println(currentPlayer + ": du musst aussetzen!");
         }
 
-    // Player Reihenfolge:
-    currentPlayerNumber =allPlayers.nextPlayer(direction,currentPlayerNumber);
-    currentPlayer =allPlayers.getPlayer(currentPlayerNumber -1);
+        // Player Reihenfolge:
+        currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
+        currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
 
 //    // nachzählen, ob gesamt 108 Karten sind!
 //        System.out.println("Karten im Spiel: "+(deck.discardpile.size()+deck.drawpile.size()+allPlayers.countAllPlayerCards()));
-}
+    }
 
     private void printState() {
         //TODO: Ausgabe des aktuellen Zustands
@@ -200,9 +178,40 @@ public class UNOApp {
 
     }
 
-    // Hilfe anzeigen
     // aktuelle Punkte
-    // uno rufen
+
+    public void createPlayer() {
+        while (allPlayers.allPlayer.size() < 4) {
+            output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
+            int botCount = Integer.parseInt(input.nextLine());
+            if (botCount >= 0 && botCount < 4) {
+                for (int i = 0; i < 4 - botCount; i++) { // Humans erstellen
+                    allPlayers.addPlayer(new Human(input, output));
+                }
+                for (int i = 0; i < botCount; i++) { // Bots erstellen
+                    allPlayers.addPlayer(new Bot(input, output));
+                }
+            } else {
+                output.println("Wähle eine Zahl von 0-3!");
+            }
+        }
+    }
+
+    public void namePlayers() {
+        int botNumber = 1;
+        for (Player p : allPlayers.allPlayer) {
+            if (p instanceof Human) {
+                output.println("Schreibe deinen Namen: ");
+                p.setName(input.nextLine());
+                p.handCards = deck.dealCards(7);
+            } else {
+                p.setName("Bot" + botNumber);
+                botNumber++;
+                p.handCards = deck.dealCards(7);
+                System.out.println(p.getName());
+            }
+        }
+    }
 
     public void cardStatus() {
         System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
@@ -277,33 +286,25 @@ public class UNOApp {
     }
 
     public void moveCards() {
-            currentPlayer.removeHandCard(playedCard); // remove from handCards
-            deck.addCardToDiscard(playedCard); // add to discardpile
-            topCard = playedCard; // topCard aktualisiert
+        currentPlayer.removeHandCard(playedCard); // remove from handCards
+        deck.addCardToDiscard(playedCard); // add to discardpile
+        topCard = playedCard; // topCard aktualisiert
     }
 
-    public void contestPlus4(){
+    public void contestPlus4() {
         int nextPlayerIndex = allPlayers.nextPlayer(direction, currentPlayerNumber) - 1;
-        //int prevPlayerIndex = allPlayers.prevPlayer(direction, currentPlayerNumber) - 1;
+        Player nextPlayer = allPlayers.getPlayer(nextPlayerIndex);
 
-        output.println(allPlayers.getPlayer(nextPlayerIndex) + ": willst du die +4 anfechten? (J/N)");
-        if(input.nextLine().equalsIgnoreCase("j")) {
-            output.print(currentPlayer + ": ");
-            currentPlayer.printHandCards();
+        int cheated = currentPlayer.contestPlus4(nextPlayer, topCard);
 
-            if(currentPlayer.checkContest(topCard)) {
-                currentPlayer.handCards.addAll(deck.dealCards(4));
-                output.println(currentPlayer + " hat geschummelt und bekommt 4 Strafkarten!");
-            } else {
-                allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(6));
-                output.println(currentPlayer + " hat NICHT geschummelt! Du bekommst jetzt 6 Strafkarten.");
-            }
-
+        if (cheated == 1) { // wenn geschummelt: 1
+            currentPlayer.handCards.addAll(deck.dealCards(4));
+        } else if (cheated == 2) { // hat nicht geschummelt: 2
+            nextPlayer.handCards.addAll(deck.dealCards(6));
         } else {
-            allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(4));
-            output.println(allPlayers.getPlayer(nextPlayerIndex) + " hat 4 Karten bekommen!!");
+            nextPlayer.handCards.addAll(deck.dealCards(4));
+            output.println(nextPlayer + " hat 4 Karten bekommen!!");
         }
-
     }
 
 }

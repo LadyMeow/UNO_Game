@@ -10,7 +10,6 @@ import java.util.Scanner;
 
 public abstract class Player {
     private String name;
-    //public int order; // 1-4 - equals number of player
     public ArrayList<Card> handCards;
     protected final Scanner input;
     protected final PrintStream output;
@@ -21,10 +20,6 @@ public abstract class Player {
         this.input = input;
         this.output = output;
         this.uno = false;
-    }
-
-    public void addHandCards(ArrayList<Card> a) {
-        handCards.addAll(a);
     }
 
     public void printHandCards() {
@@ -52,6 +47,9 @@ public abstract class Player {
 
     // ColorWish
     public abstract Colors chooseColor();
+
+    // contest +4
+    public abstract int contestPlus4(Player nextPlayer, Card topCard);
 
     // check if color in handcards (contest)
     public abstract boolean checkContest(Card topCard);
