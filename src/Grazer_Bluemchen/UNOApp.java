@@ -90,8 +90,8 @@ public class UNOApp {
         // DiscardPile erstellen und erste Karte prüfen
         createDiscardPile();
 
-        // nachzählen, ob gesamt 108 Karten sind!
-        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards())); // details!
+//        // nachzählen, ob gesamt 108 Karten sind!
+//        System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards())); // details!
 
     }
 
@@ -170,8 +170,8 @@ public class UNOApp {
     currentPlayerNumber =allPlayers.nextPlayer(direction,currentPlayerNumber);
     currentPlayer =allPlayers.getPlayer(currentPlayerNumber -1);
 
-    // nachzählen, ob gesamt 108 Karten sind!
-        System.out.println("Karten im Spiel: "+(deck.discardpile.size()+deck.drawpile.size()+allPlayers.countAllPlayerCards()));
+//    // nachzählen, ob gesamt 108 Karten sind!
+//        System.out.println("Karten im Spiel: "+(deck.discardpile.size()+deck.drawpile.size()+allPlayers.countAllPlayerCards()));
 }
 
     private void printState() {
@@ -188,8 +188,8 @@ public class UNOApp {
             return;
         }
 
-        // Karten zählen
-        cardStatus();
+//        // Karten zählen
+//        cardStatus();
 
         // print handCards from currentPlayer
         output.print(currentPlayer.getName() + ": ");
@@ -250,7 +250,8 @@ public class UNOApp {
             valid = deck.checkCard(playedCard);
             // check if valid or action or special
             if (valid == CardType.INVALID) {
-                output.println("Diese Karte ist nicht gültig!");
+                output.println("Diese Karte ist nicht gültig! Du bekommst jetzt eine Strafkarte! Hihihi");
+                currentPlayer.handCards.addAll(deck.dealCards(1));
             } else if (valid == CardType.NORMAL) {
 
             } else if (valid == CardType.PLUS_TWO) {
