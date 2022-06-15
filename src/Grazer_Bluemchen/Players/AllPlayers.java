@@ -1,7 +1,8 @@
-package Grazer_Bluemchen;
+package Grazer_Bluemchen.Players;
+
+import Grazer_Bluemchen.Players.Player;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class AllPlayers {
     public ArrayList<Player> allPlayer;

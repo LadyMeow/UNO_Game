@@ -1,4 +1,7 @@
-package Grazer_Bluemchen;
+package Grazer_Bluemchen.Players;
+
+import Grazer_Bluemchen.Cards.Card;
+import Grazer_Bluemchen.Cards.Colors;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -11,7 +14,7 @@ public abstract class Player {
     public ArrayList<Card> handCards;
     protected final Scanner input;
     protected final PrintStream output;
-    protected boolean uno;
+    private boolean uno;
 
     public Player(Scanner input, PrintStream output) {
         handCards = new ArrayList<>();
@@ -64,8 +67,16 @@ public abstract class Player {
         return name;
     }
 
+    public boolean isUno() {
+        return uno;
+    }
+
     // setter
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setUno(boolean uno) {
+        this.uno = uno;
     }
 }

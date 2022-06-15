@@ -1,6 +1,14 @@
 package Grazer_Bluemchen;
 
+import Grazer_Bluemchen.Cards.Card;
+import Grazer_Bluemchen.Cards.CardDeck;
+import Grazer_Bluemchen.Cards.CardType;
+import Grazer_Bluemchen.Cards.Colors;
 import Grazer_Bluemchen.Help.Help;
+import Grazer_Bluemchen.Players.AllPlayers;
+import Grazer_Bluemchen.Players.Bot;
+import Grazer_Bluemchen.Players.Human;
+import Grazer_Bluemchen.Players.Player;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -125,9 +133,9 @@ public class UNOApp {
             output.println(currentPlayer + " hat Karte: " + playedCard + " gespielt.");
             // UNO prüfen
             if (currentPlayer.handCards.size() == 1) {
-                if (currentPlayer.uno) {
+                if (currentPlayer.isUno()) {
                     output.println(currentPlayer + " hat UNO gesagt!");
-                    currentPlayer.uno = false;
+                    currentPlayer.setUno(false);
                 } else {
                     output.println("Du hast nicht UNO gesagt! Und bekommst 2 Strafkarten!");
                     currentPlayer.handCards.addAll(deck.dealCards(2));

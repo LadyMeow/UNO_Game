@@ -1,4 +1,7 @@
-package Grazer_Bluemchen;
+package Grazer_Bluemchen.Players;
+
+import Grazer_Bluemchen.Cards.Card;
+import Grazer_Bluemchen.Cards.Colors;
 
 import java.io.PrintStream;
 import java.util.Scanner;

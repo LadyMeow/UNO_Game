@@ -1,4 +1,4 @@
-package Grazer_Bluemchen;
+package Grazer_Bluemchen.Cards;
 
 import java.util.Objects;
 

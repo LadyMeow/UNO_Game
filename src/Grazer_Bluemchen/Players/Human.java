@@ -1,5 +1,7 @@
-package Grazer_Bluemchen;
+package Grazer_Bluemchen.Players;
 
+import Grazer_Bluemchen.Cards.Card;
+import Grazer_Bluemchen.Cards.Colors;
 import Grazer_Bluemchen.Help.Help;
 
 import java.io.IOException;
@@ -24,7 +26,7 @@ public class Human extends Player {
             }
 
             if (playCard.toLowerCase().contains("uno")) {
-                uno = true;
+                setUno(true);
                 playCard = playCard.replace(" uno", "");
             }
 
@@ -50,7 +52,7 @@ public class Human extends Player {
             String playCard = input.nextLine();
 
             if (playCard.toLowerCase().contains("uno")) {
-                uno = true;
+                setUno(true);
                 playCard = playCard.replace(" uno", "");
             }
 
