@@ -228,6 +228,8 @@ public class UNOApp {
         } else if (topCard.getName().contains("+2")) {
             currentPlayer.handCards.addAll(deck.dealCards(2));
             output.println(currentPlayer + " hat 2 Karten bekommen!!");
+            currentPlayerNumber++;
+            currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
         } else if (topCard.getName().contains("Reverse")) {
             direction = false;
             output.println("Richtungswechsel!");
@@ -253,7 +255,9 @@ public class UNOApp {
 
             } else if (valid == CardType.PLUS_TWO) {
                 allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(2));
-                output.println("Du hast 2 Karten bekommen!!");
+                output.println(allPlayers.getPlayer(nextPlayerIndex) + " hat 2 Karten bekommen!!");
+                currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
+                currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
             } else if (valid == CardType.REVERSE) {
                 direction = !direction;
                 output.println("Richtungswechsel!");
