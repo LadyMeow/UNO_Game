@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Card {
     private Colors color;
     private int value;
-    public String name;
+    private String name;
     private int points;
     // name is combination of color + value (z.B: R3)
 
@@ -76,6 +76,14 @@ public class Card {
 
     public void setColor(Colors color) {
         this.color = color;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

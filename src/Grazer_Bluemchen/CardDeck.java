@@ -24,19 +24,19 @@ public class CardDeck {
         if (playedCard.getValue() == topCard.getValue() && (topCard.getValue() >= 0)) { // special und action cards value = -1!!
             validation = CardType.NORMAL;
         }
-        if (playedCard.name.contains("+2") && ((topCard.getColor() == playedCard.getColor()) || topCard.name.contains("+2"))) {
+        if (playedCard.getName().contains("+2") && ((topCard.getColor() == playedCard.getColor()) || topCard.getName().contains("+2"))) {
             validation = CardType.PLUS_TWO;
         }
-        if (playedCard.name.toLowerCase().contains("reverse") && ((topCard.getColor() == playedCard.getColor()) || topCard.name.contains("Reverse"))) {
+        if (playedCard.getName().toLowerCase().contains("reverse") && ((topCard.getColor() == playedCard.getColor()) || topCard.getName().contains("Reverse"))) {
             validation = CardType.REVERSE;
         }
-        if (playedCard.name.toLowerCase().contains("skip") && ((topCard.getColor() == playedCard.getColor()) || topCard.name.contains("Skip"))) {
+        if (playedCard.getName().toLowerCase().contains("skip") && ((topCard.getColor() == playedCard.getColor()) || topCard.getName().contains("Skip"))) {
             validation = CardType.SKIP;
         }
-        if (playedCard.name.toLowerCase().contains("colorchange")) {
+        if (playedCard.getName().toLowerCase().contains("colorchange")) {
             validation = CardType.COLORCHANGE;
         }
-        if (playedCard.name.contains("+4")) {
+        if (playedCard.getName().contains("+4")) {
             validation = CardType.PLUS_FOUR;
         }
         return validation;
@@ -73,7 +73,7 @@ public class CardDeck {
     // method: print all card names
     public void printAllCards() {
         for (Card c : drawpile) {
-            System.out.print(c.name + " ");
+            System.out.print(c.getName() + " ");
         }
         System.out.println();
     }
@@ -116,7 +116,7 @@ public class CardDeck {
 
     // discardpile takes 1 card of drawpile (index 0)
     public CardDeck addToDiscardPile() {
-        while(drawpile.get(0).name.contains("+4")) {
+        while(drawpile.get(0).getName().contains("+4")) {
             shuffle();
         }
         discardpile.add(drawpile.get(0));

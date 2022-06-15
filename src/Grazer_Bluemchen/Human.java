@@ -34,7 +34,7 @@ public class Human extends Player {
             }
 
             for (Card hc : handCards) {
-                if (hc.name.equalsIgnoreCase(playCard)) {
+                if (hc.getName().equalsIgnoreCase(playCard)) {
                     return hc;
                 }
             }
@@ -59,7 +59,7 @@ public class Human extends Player {
             }
 
             for (Card hc : handCards) {
-                if (hc.name.equalsIgnoreCase(playCard)) {
+                if (hc.getName().equalsIgnoreCase(playCard)) {
                     return hc;
                 }
             }
@@ -95,7 +95,7 @@ public class Human extends Player {
 
     public boolean checkContest(Card topCard) {
         for (Card c : handCards) {
-            if (c.name.equals("ColorChange") || c.name.equals("+4")) {
+            if (c.getName().equals("ColorChange") || c.getName().equals("+4")) {
 
             } else if (c.getColor() == topCard.getColor()) {
                 return true;

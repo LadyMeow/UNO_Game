@@ -213,17 +213,17 @@ public class UNOApp {
         topCard = deck.discardpile.get(0);
 
         // check first Card
-        if (topCard.name.contains("Skip")) { // vorher topCard und handcards printen
+        if (topCard.getName().contains("Skip")) { // vorher topCard und handcards printen
             output.println("Der erste Spieler: " + currentPlayer + " muss aussetzen!");
             currentPlayerNumber++;
             currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
-        } else if (topCard.name.contains("+2")) {
+        } else if (topCard.getName().contains("+2")) {
             currentPlayer.handCards.addAll(deck.dealCards(2));
             output.println(currentPlayer + " hat 2 Karten bekommen!!");
-        } else if (topCard.name.contains("Reverse")) {
+        } else if (topCard.getName().contains("Reverse")) {
             direction = false;
             output.println("Richtungswechsel!");
-        } else if (topCard.name.equals("ColorChange")) {
+        } else if (topCard.getName().equals("ColorChange")) {
             deck.printDiscardPile();
             output.print(currentPlayer.getName() + ": ");
             currentPlayer.printHandCards();

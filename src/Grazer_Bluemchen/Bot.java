@@ -1,7 +1,6 @@
 package Grazer_Bluemchen;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Bot extends Player {
@@ -20,7 +19,7 @@ public class Bot extends Player {
                 return c;
             } else if (topCard.getValue() == c.getValue() && (topCard.getValue() >= 0)) {
                 return c;
-            } else if (c.name.equals("ColorChange") || c.name.equals("+4")) {
+            } else if (c.getName().equals("ColorChange") || c.getName().equals("+4")) {
                 return c;
             }
         }
@@ -35,7 +34,7 @@ public class Bot extends Player {
             return c;
         } else if (topCard.getValue() == c.getValue() && (topCard.getValue() >= 0)) {
             return c;
-        } else if (c.name.equals("ColorChange") || c.name.equals("+4")) {
+        } else if (c.getName().equals("ColorChange") || c.getName().equals("+4")) {
             return c;
         }
         return null;
@@ -44,7 +43,7 @@ public class Bot extends Player {
     @Override
     public Colors chooseColor() {
         for (Card c : handCards) {
-            if ((!c.name.equals("ColorChange")) && (!c.name.equals("+4"))) {
+            if ((!c.getName().equals("ColorChange")) && (!c.getName().equals("+4"))) {
                 output.println("Wunschfarbe ist: " + c.getColor());
                 return c.getColor();
             }
@@ -55,7 +54,7 @@ public class Bot extends Player {
     @Override
     public boolean checkContest(Card topCard) {
         for (Card c : handCards) {
-            if (c.name.equals("ColorChange") || c.name.equals("+4")) {
+            if (c.getName().equals("ColorChange") || c.getName().equals("+4")) {
 
             } else if (c.getColor() == topCard.getColor()) {
                 return true;

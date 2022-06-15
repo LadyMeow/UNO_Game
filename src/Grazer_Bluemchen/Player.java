@@ -26,7 +26,7 @@ public abstract class Player {
 
     public void printHandCards() {
         for (Card c : handCards) {
-            System.out.print(c.name + " ");
+            System.out.print(c.getName() + " ");
         }
         System.out.println();
     }
