@@ -70,32 +70,14 @@ public class UNOApp {
 
         // DiscardPile erstellen und erste Karte prüfen
         createDiscardPile();
-
     }
 
     private void inputPlayer() throws IOException {
-        // Bot legt Karte
         if (currentPlayer instanceof Bot) {
-            playedCard = currentPlayer.searchHandCards(topCard);
-            if (playedCard == null) {
-                currentPlayer.handCards.addAll(deck.dealCards(1)); // Bot hebt 1 card ab
-                currentPlayer.playIfPossible(topCard); // Bot spielt, wenn möglich, die abgehobene Karte
-                return;
-            } else if (currentPlayer.handCards.size() == 2) {
-                output.println(currentPlayer + " hat UNO gesagt!");
-            }
-        } else { // Spieler legt Karte
-            // wenn Eingabe h: eine Karte heben
-            playedCard = currentPlayer.searchHandCards(topCard);
-
-            if (playedCard == null) {
-                currentPlayer.handCards.addAll(deck.dealCards(1));
-                // print handcards
-                System.out.print(currentPlayer.getName() + ": ");
-                currentPlayer.printHandCards();
-
-                playedCard = currentPlayer.playIfPossible(topCard);
-            }
+            botPlays();
+        } else {
+            playedCard = currentPlayer.searchHandCards(topCard); // Spieler wählt Karte, Eingabe k: abheben, Eingabe w: weiter
+            humanPlays();
         }
     }
 
@@ -207,7 +189,7 @@ public class UNOApp {
             } else {
                 p.setName("Bot" + botNumber);
                 botNumber++;
-                p.handCards = deck.dealCards(7);
+                p.handCards = deck.dealCards(3);
                 System.out.println(p.getName());
             }
         }
@@ -307,5 +289,28 @@ public class UNOApp {
         }
     }
 
+    // Spielen Methoden
+    public void humanPlays() {
+        if (playedCard == null) {
+            currentPlayer.handCards.addAll(deck.dealCards(1));
+            // print handcards
+            System.out.print(currentPlayer.getName() + ": ");
+            currentPlayer.printHandCards();
+
+            playedCard = currentPlayer.playIfPossible(topCard);
+        }
+    }
+
+    public void botPlays() throws IOException {
+        playedCard = currentPlayer.searchHandCards(topCard); // Bot spielt eine Karte (wenn sie passt)
+        if (playedCard == null) {
+            currentPlayer.handCards.addAll(deck.dealCards(1)); // Bot hebt 1 card ab
+            if(currentPlayer.playIfPossible(topCard) != null && (currentPlayer.handCards.size() == 2)) { // Bot spielt, wenn möglich, die abgehobene Karte
+                output.println(currentPlayer + " hat UNO gesagt!");
+            }
+        } else if (currentPlayer.handCards.size() == 2) {
+            output.println(currentPlayer + " hat UNO gesagt!");
+        }
+    }
 }
 
