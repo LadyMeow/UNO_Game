@@ -25,9 +25,9 @@ public class Human extends Player {
                 help.printHelp();
             }
 
-            if (playCard.toLowerCase().contains("uno")) {
+            if (playCard.toLowerCase().contains("uno")) { // ACHTUNG!!! wenn nur UNO?
                 setUno(true);
-                playCard = playCard.replace(" uno", "");
+                playCard = playCard.replace("uno", "").trim();
             }
 
             // abheben & Karte Spielen noch möglich!
@@ -53,7 +53,7 @@ public class Human extends Player {
 
             if (playCard.toLowerCase().contains("uno")) {
                 setUno(true);
-                playCard = playCard.replace(" uno", "");
+                playCard = playCard.replace("uno", "").trim();
             }
 
             if (playCard.equalsIgnoreCase("w")) {

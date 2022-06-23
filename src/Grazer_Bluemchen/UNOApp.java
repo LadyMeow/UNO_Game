@@ -120,6 +120,8 @@ public class UNOApp {
             return;
         }
 
+        // +2 auch hier!!! weil Spieler switch
+
         if (valid == CardType.SKIP) {
             currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
             currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
