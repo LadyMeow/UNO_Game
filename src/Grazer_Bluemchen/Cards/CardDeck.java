@@ -56,8 +56,8 @@ public class CardDeck {
         ArrayList<Card> handCards = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
             if(drawpile.size() == 0) {
-                Card helper = discardpile.get(0); // top card
-                discardpile.remove(0);
+                Card helper = discardpile.get(discardpile.size() - 1); // top card
+                discardpile.remove(discardpile.size() - 1);
 
                 Collections.shuffle(discardpile);
                 drawpile.addAll(discardpile);

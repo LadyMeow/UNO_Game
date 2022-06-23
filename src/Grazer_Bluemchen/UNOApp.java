@@ -120,7 +120,15 @@ public class UNOApp {
             return;
         }
 
-        // +2 auch hier!!! weil Spieler switch
+        // +2 hier!!! weil Spieler switch
+        if (valid == CardType.PLUS_TWO) {
+            int nextPlayerIndex = allPlayers.nextPlayer(direction, currentPlayerNumber) - 1;
+
+            allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(2));
+            output.println(allPlayers.getPlayer(nextPlayerIndex) + " hat 2 Karten bekommen!!");
+            currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
+            currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+        }
 
         if (valid == CardType.SKIP) {
             currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
@@ -150,8 +158,8 @@ public class UNOApp {
             return;
         }
 
-//        // Karten zählen
-//        cardStatus();
+        // Karten zählen
+        cardStatus();
 
         // print handCards from currentPlayer
         output.print(currentPlayer.getName() + ": ");
@@ -168,7 +176,7 @@ public class UNOApp {
         while (allPlayers.allPlayer.size() < 4) {
             output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
             int botCount = Integer.parseInt(input.nextLine());
-            if (botCount >= 0 && botCount < 4) {
+            if (botCount >= 0 && botCount < 5) {
                 for (int i = 0; i < 4 - botCount; i++) { // Humans erstellen
                     allPlayers.addPlayer(new Human(input, output));
                 }
@@ -191,7 +199,7 @@ public class UNOApp {
             } else {
                 p.setName("Bot" + botNumber);
                 botNumber++;
-                p.handCards = deck.dealCards(3);
+                p.handCards = deck.dealCards(7);
                 System.out.println(p.getName());
             }
         }
@@ -236,7 +244,6 @@ public class UNOApp {
     }
 
     public CardType checkValidation() {
-        int nextPlayerIndex = allPlayers.nextPlayer(direction, currentPlayerNumber) - 1;
         CardType valid = null;
 
         if (playedCard != null) {
@@ -247,11 +254,6 @@ public class UNOApp {
                 currentPlayer.handCards.addAll(deck.dealCards(1));
             } else if (valid == CardType.NORMAL) {
 
-            } else if (valid == CardType.PLUS_TWO) {
-                allPlayers.getPlayer(nextPlayerIndex).handCards.addAll(deck.dealCards(2));
-                output.println(allPlayers.getPlayer(nextPlayerIndex) + " hat 2 Karten bekommen!!");
-                currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
-                currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
             } else if (valid == CardType.REVERSE) {
                 direction = !direction;
                 output.println("Richtungswechsel!");
@@ -308,9 +310,11 @@ public class UNOApp {
         if (playedCard == null) {
             currentPlayer.handCards.addAll(deck.dealCards(1)); // Bot hebt 1 card ab
             if(currentPlayer.playIfPossible(topCard) != null && (currentPlayer.handCards.size() == 2)) { // Bot spielt, wenn möglich, die abgehobene Karte
+                currentPlayer.setUno(true);
                 output.println(currentPlayer + " hat UNO gesagt!");
             }
         } else if (currentPlayer.handCards.size() == 2) {
+            currentPlayer.setUno(true);
             output.println(currentPlayer + " hat UNO gesagt!");
         }
     }

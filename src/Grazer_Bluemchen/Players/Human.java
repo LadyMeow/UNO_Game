@@ -25,7 +25,7 @@ public class Human extends Player {
                 help.printHelp();
             }
 
-            if (playCard.toLowerCase().contains("uno")) { // ACHTUNG!!! wenn nur UNO?
+            if (playCard.toLowerCase().contains("uno")) {
                 setUno(true);
                 playCard = playCard.replace("uno", "").trim();
             }
