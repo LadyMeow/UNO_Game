@@ -176,7 +176,7 @@ public class UNOApp {
         while (allPlayers.allPlayer.size() < 4) {
             output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
             int botCount = Integer.parseInt(input.nextLine());
-            if (botCount >= 0 && botCount < 5) {
+            if (botCount >= 0 && botCount < 5) { // ACHTUNG 4 Bots möglich
                 for (int i = 0; i < 4 - botCount; i++) { // Humans erstellen
                     allPlayers.addPlayer(new Human(input, output));
                 }
