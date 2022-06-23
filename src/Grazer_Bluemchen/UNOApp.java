@@ -92,7 +92,7 @@ public class UNOApp {
         } else {
             output.println(currentPlayer + " hat Karte: " + playedCard + " gespielt.");
             // UNO prüfen
-            if (currentPlayer.handCards.size() == 1) {
+            if (currentPlayer.handCards.size() == 1 && currentPlayer instanceof Human) { // Bots sagen immer automatisch UNO
                 if (currentPlayer.isUno()) {
                     output.println(currentPlayer + " hat UNO gesagt!");
                     currentPlayer.setUno(false);
@@ -310,11 +310,9 @@ public class UNOApp {
         if (playedCard == null) {
             currentPlayer.handCards.addAll(deck.dealCards(1)); // Bot hebt 1 card ab
             if(currentPlayer.playIfPossible(topCard) != null && (currentPlayer.handCards.size() == 2)) { // Bot spielt, wenn möglich, die abgehobene Karte
-                currentPlayer.setUno(true);
                 output.println(currentPlayer + " hat UNO gesagt!");
             }
         } else if (currentPlayer.handCards.size() == 2) {
-            currentPlayer.setUno(true);
             output.println(currentPlayer + " hat UNO gesagt!");
         }
     }
