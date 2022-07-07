@@ -32,17 +32,19 @@ public class UNOApp {
     private Colors colorWish;
     private Help help = new Help();
     private SqliteClient dbClient;
-    private static final String INSERT_TEMPLATE= "INSERT INTO Sessions (Player, Session, Round, Score) VALUES ('%1s', %2d, %3d, %4d);";
+    private static final String INSERT_TEMPLATE = "INSERT INTO Sessions (Player, Session, Round, Score) VALUES ('%1s', %2d, %3d, %4d);";
     private static final String SELECT_BYPLAYERANDSESSION = "SELECT Player, SUM(Score) AS Score FROM Sessions WHERE Player = '%1s' AND Session = %2d;";
-    public  int round=1;
+    public int round = 1;
+    public int session = 1;
+    public boolean newSession = true;
 
     // constructor
-    public UNOApp(Scanner input, PrintStream output, SqliteClient dbClient)  {
+    public UNOApp(Scanner input, PrintStream output, SqliteClient dbClient) {
         this.input = input;
         this.output = output;
         currentPlayerNumber = (int) (Math.random() * (4 - 1)) + 1; // random number (1-4)
         this.dbClient = dbClient;
-        this.round = round;
+        //this.round = round;
     }
 
     // GameLoop
@@ -63,27 +65,32 @@ public class UNOApp {
         // Neue Runde
         exit = false;
 
-        // help ausgeben
-        help.printHelp();
+        if (round > 1) {
+            newRound(); // ab 2. Runde
+        } else { // beim ersten Spiel
 
-        // Anzahl Bots und Menschen erstellen?
-        //******************************************ANFORDERUNG 5 **************************************************
-        createPlayer();
+            // help ausgeben
+            help.printHelp();
 
-        // drawPile erstellen
-        deck.createDrawPile();
-        //**************************************ANFORDERUNG 4 ***********************************************************
-        deck.shuffle();
+            // Anzahl Bots und Menschen erstellen?
+            //******************************************ANFORDERUNG 5 **************************************************
+            createPlayer();
 
-        // name eingeben
-        namePlayers();
+            // drawPile erstellen
+            deck.createDrawPile();
+            //**************************************ANFORDERUNG 4 ***********************************************************
+            deck.shuffle();
 
-        //CurrentPlayer initialize + print
-        currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
-        output.println("Startspieler (wurde zufällig gewählt): " + currentPlayer);
+            // name eingeben + Handkarten austeilen
+            namePlayers();
 
-        // DiscardPile erstellen und erste Karte prüfen
-        createDiscardPile();
+            //CurrentPlayer initialize + print
+            currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+            output.println("Startspieler (wurde zufällig gewählt): " + currentPlayer);
+
+            // DiscardPile erstellen und erste Karte prüfen
+            createDiscardPile();
+        }
     }
 
     private void inputPlayer() throws IOException {
@@ -130,11 +137,12 @@ public class UNOApp {
         // 0 Cards check - gewonnen?
         if (currentPlayer.handCards.size() == 0) {
             output.println(currentPlayer + " du hast gewonnen!");
-            int points= countPoints();
-            output.println(( currentPlayer + " du hast: "+ points + " Punkte bekommen! "));
+            round++;
+            int points = countPoints();
+            output.println((currentPlayer + " du hast: " + points + " Punkte bekommen! "));
             try {
-                dbClient.executeStatement(String.format(INSERT_TEMPLATE, currentPlayer.getName(), 1, 1, points )); // throws SQLException
-            } catch(SQLException e) {
+                dbClient.executeStatement(String.format(INSERT_TEMPLATE, currentPlayer.getName(), session, round, points)); // throws SQLException
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
             exit = true;
@@ -171,11 +179,33 @@ public class UNOApp {
 
         // wenn Runde gewonnen wurde-->wenn eine spiel fertig wird
         if (exit) {
-            allPlayers.allPlayer.clear();
+
+            ArrayList<HashMap<String, String>> results = null;
+            try {
+                results = dbClient.executeQuery(String.format(SELECT_BYPLAYERANDSESSION, currentPlayer.getName(), session));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            int points = Integer.parseInt(results.get(0).get("Score"));
+            output.println(currentPlayer.getName() + "Punkte: " + points);
+
+            if (points >= 100) { // Spiel vorbei
+                allPlayers.allPlayer.clear();
+                output.println("Neues Spiel? (J/N)");
+                session++;
+                newSession = true;
+                round = 1;
+            } else {
+                // Runde vorbei
+                for (Player p : allPlayers.allPlayer) {
+                    p.handCards.clear();
+                }
+                output.println("Neue Runde? (J/N)");
+            }
+            // Spiel vorbei + Runde vorbei
             deck.drawpile.clear();
             deck.discardpile.clear();
             currentPlayerNumber = (int) (Math.random() * (4 - 1)) + 1;
-            output.println("Neue Runde? (J/N)");
             return;
         }
 
@@ -191,16 +221,20 @@ public class UNOApp {
     }
 
     private void newRound() {
-        direction=true;
-        round++;
-        System.out.println("Runde: "+ round);
-        if (round>1){
-            currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
-            currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
-            deck.createDrawPile();
-            deck.shuffle();
-            deck.dealCards(7);
+        direction = true;
+        System.out.println("Runde: " + round);
+
+        System.out.println("Startspieler ist der Gewinner von dieser Runde: " + currentPlayer);
+
+        deck.createDrawPile();
+        deck.shuffle();
+
+        for (Player p : allPlayers.allPlayer) {
+            p.handCards = deck.dealCards(2); // ACHTUNG!! nur 2 Karten
         }
+
+        createDiscardPile();
+
     }
 
     // aktuelle Punkte
@@ -210,7 +244,8 @@ public class UNOApp {
             //*********************************ANFORDERUNG2 ************************************
             output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
             int botCount = Integer.parseInt(input.nextLine());
-            if (botCount >= 0 && botCount < 5) { // ACHTUNG 4 Bots möglich
+
+            if (botCount >= 0 && botCount < 4) {
                 for (int i = 0; i < 4 - botCount; i++) { // Humans erstellen
                     allPlayers.addPlayer(new Human(input, output));
                 }
@@ -222,14 +257,15 @@ public class UNOApp {
             }
         }
     }
-        //*********** ANFORDERUNG 1 UND 3  und 5*********************************************************
+
+    //*********** ANFORDERUNG 1 UND 3  und 5*********************************************************
     public void namePlayers() {
         int botNumber = 1;
         for (Player p : allPlayers.allPlayer) {
             if (p instanceof Human) {
                 output.println("Schreibe deinen Namen: ");
                 p.setName(input.nextLine());
-                p.handCards = deck.dealCards(7);
+                p.handCards = deck.dealCards(2);
             } else {
                 p.setName("Bot" + botNumber);
                 botNumber++;
@@ -239,23 +275,26 @@ public class UNOApp {
         }
     }
 
-    private void initializeDataBase(){
-        for (Player p: allPlayers.allPlayer) {
-            try {
-                dbClient.executeStatement(String.format(INSERT_TEMPLATE, p.getName(), 1, 1, 0 )); // throws SQLException
-            } catch(SQLException e) {
-                throw new RuntimeException(e);
+    private void initializeDataBase() {
+        if (newSession) {
+            for (Player p : allPlayers.allPlayer) {
+                try {
+                    dbClient.executeStatement(String.format(INSERT_TEMPLATE, p.getName(), session, round, 0)); // throws SQLException
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
+            newSession = false;
         }
     }
 
-    private void printPoints(){
-        for (Player p: allPlayers.allPlayer) {
+    private void printPoints() {
+        for (Player p : allPlayers.allPlayer) {
             try {
-                ArrayList<HashMap<String, String>> results = dbClient.executeQuery(String.format(SELECT_BYPLAYERANDSESSION, p.getName(), 1));
-                int points= Integer.parseInt(results.get(0).get("Score"));
-                output.println( p.getName() +"Punkte: "+  points);
-            } catch(SQLException e) {
+                ArrayList<HashMap<String, String>> results = dbClient.executeQuery(String.format(SELECT_BYPLAYERANDSESSION, p.getName(), session));
+                int points = Integer.parseInt(results.get(0).get("Score"));
+                output.println(p.getName() + "Punkte: " + points);
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -365,7 +404,7 @@ public class UNOApp {
         playedCard = currentPlayer.searchHandCards(topCard); // Bot spielt eine Karte (wenn sie passt)
         if (playedCard == null) {
             currentPlayer.handCards.addAll(deck.dealCards(1)); // Bot hebt 1 card ab
-            if(currentPlayer.playIfPossible(topCard) != null && (currentPlayer.handCards.size() == 2)) { // Bot spielt, wenn möglich, die abgehobene Karte
+            if (currentPlayer.playIfPossible(topCard) != null && (currentPlayer.handCards.size() == 2)) { // Bot spielt, wenn möglich, die abgehobene Karte
                 output.println(currentPlayer + " hat UNO gesagt!");
             }
         } else if (currentPlayer.handCards.size() == 2) {
@@ -373,14 +412,14 @@ public class UNOApp {
         }
     }
 
-    private int countPoints (){
-        int sum=0;
-        for (Player p: allPlayers.allPlayer) {
-            for ( Card c : p.handCards) {
+    private int countPoints() {
+        int sum = 0;
+        for (Player p : allPlayers.allPlayer) {
+            for (Card c : p.handCards) {
                 sum += c.getPoints();
             }
         }
-        return  sum;
+        return sum;
     }
 
 }

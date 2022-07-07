@@ -18,9 +18,9 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        try{
+        try {
             SqliteClient client = new SqliteClient("demodatabase.sqlite");
-            if (client.tableExists("Sessions")){
+            if (client.tableExists("Sessions")) {
                 client.executeStatement("DROP TABLE Sessions;");
             }
             client.executeStatement(CREATETABLE);
@@ -46,16 +46,9 @@ public class Main {
 
             input.close();
             System.out.println("Das Programm wird beendet ...");
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             System.out.println("Ups! Something went wrong:" + ex.getMessage());
         }
-
-
-
-
-
-
-
     }
 
 
