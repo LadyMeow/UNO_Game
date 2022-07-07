@@ -4,6 +4,7 @@ import Grazer_Bluemchen.Cards.Card;
 import Grazer_Bluemchen.Cards.CardDeck;
 import Grazer_Bluemchen.Cards.CardType;
 import Grazer_Bluemchen.Cards.Colors;
+import Grazer_Bluemchen.DB.SqliteClient;
 import Grazer_Bluemchen.Help.Help;
 import Grazer_Bluemchen.Players.AllPlayers;
 import Grazer_Bluemchen.Players.Bot;
@@ -12,6 +13,9 @@ import Grazer_Bluemchen.Players.Player;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class UNOApp {
@@ -27,17 +31,25 @@ public class UNOApp {
     private boolean direction = true; // im Uhrzeigersinn
     private Colors colorWish;
     private Help help = new Help();
+    private SqliteClient dbClient;
+    private static final String INSERT_TEMPLATE= "INSERT INTO Sessions (Player, Session, Round, Score) VALUES ('%1s', %2d, %3d, %4d);";
+    private static final String SELECT_BYPLAYERANDSESSION = "SELECT Player, SUM(Score) AS Score FROM Sessions WHERE Player = '%1s' AND Session = %2d;";
+    public  int round=1;
 
     // constructor
-    public UNOApp(Scanner input, PrintStream output) {
+    public UNOApp(Scanner input, PrintStream output, SqliteClient dbClient)  {
         this.input = input;
         this.output = output;
         currentPlayerNumber = (int) (Math.random() * (4 - 1)) + 1; // random number (1-4)
+        this.dbClient = dbClient;
+        this.round = round;
     }
 
     // GameLoop
     public void Run() throws IOException {
         initialize();
+        initializeDataBase();
+        printPoints();
         printState();
 
         while (!exit) {
@@ -118,6 +130,13 @@ public class UNOApp {
         // 0 Cards check - gewonnen?
         if (currentPlayer.handCards.size() == 0) {
             output.println(currentPlayer + " du hast gewonnen!");
+            int points= countPoints();
+            output.println(( currentPlayer + " du hast: "+ points + " Punkte bekommen! "));
+            try {
+                dbClient.executeStatement(String.format(INSERT_TEMPLATE, currentPlayer.getName(), 1, 1, points )); // throws SQLException
+            } catch(SQLException e) {
+                throw new RuntimeException(e);
+            }
             exit = true;
             return;
         }
@@ -150,7 +169,7 @@ public class UNOApp {
         //TODO: Ausgabe des aktuellen Zustands
         // der Spieler der gerade dran ist: sieht handCards
 
-        // wenn Runde gewonnen wurde
+        // wenn Runde gewonnen wurde-->wenn eine spiel fertig wird
         if (exit) {
             allPlayers.allPlayer.clear();
             deck.drawpile.clear();
@@ -169,7 +188,19 @@ public class UNOApp {
 
         // erste Karte wird aufgedeckt
         deck.printDiscardPile();
+    }
 
+    private void newRound() {
+        direction=true;
+        round++;
+        System.out.println("Runde: "+ round);
+        if (round>1){
+            currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
+            currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+            deck.createDrawPile();
+            deck.shuffle();
+            deck.dealCards(7);
+        }
     }
 
     // aktuelle Punkte
@@ -204,6 +235,28 @@ public class UNOApp {
                 botNumber++;
                 p.handCards = deck.dealCards(7);
                 System.out.println(p.getName());
+            }
+        }
+    }
+
+    private void initializeDataBase(){
+        for (Player p: allPlayers.allPlayer) {
+            try {
+                dbClient.executeStatement(String.format(INSERT_TEMPLATE, p.getName(), 1, 1, 0 )); // throws SQLException
+            } catch(SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void printPoints(){
+        for (Player p: allPlayers.allPlayer) {
+            try {
+                ArrayList<HashMap<String, String>> results = dbClient.executeQuery(String.format(SELECT_BYPLAYERANDSESSION, p.getName(), 1));
+                int points= Integer.parseInt(results.get(0).get("Score"));
+                output.println( p.getName() +"Punkte: "+  points);
+            } catch(SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -319,5 +372,16 @@ public class UNOApp {
             output.println(currentPlayer + " hat UNO gesagt!");
         }
     }
+
+    private int countPoints (){
+        int sum=0;
+        for (Player p: allPlayers.allPlayer) {
+            for ( Card c : p.handCards) {
+                sum += c.getPoints();
+            }
+        }
+        return  sum;
+    }
+
 }
 
