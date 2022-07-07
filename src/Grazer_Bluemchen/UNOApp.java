@@ -34,7 +34,7 @@ public class UNOApp {
     private SqliteClient dbClient;
     private static final String INSERT_TEMPLATE= "INSERT INTO Sessions (Player, Session, Round, Score) VALUES ('%1s', %2d, %3d, %4d);";
     private static final String SELECT_BYPLAYERANDSESSION = "SELECT Player, SUM(Score) AS Score FROM Sessions WHERE Player = '%1s' AND Session = %2d;";
-
+    public  int round=1;
 
     // constructor
     public UNOApp(Scanner input, PrintStream output, SqliteClient dbClient)  {
@@ -42,6 +42,7 @@ public class UNOApp {
         this.output = output;
         currentPlayerNumber = (int) (Math.random() * (4 - 1)) + 1; // random number (1-4)
         this.dbClient = dbClient;
+        this.round = round;
     }
 
     // GameLoop
@@ -156,7 +157,7 @@ public class UNOApp {
         //TODO: Ausgabe des aktuellen Zustands
         // der Spieler der gerade dran ist: sieht handCards
 
-        // wenn Runde gewonnen wurde
+        // wenn Runde gewonnen wurde-->wenn eine spiel fertig wird
         if (exit) {
             allPlayers.allPlayer.clear();
             deck.drawpile.clear();
@@ -166,8 +167,21 @@ public class UNOApp {
             return;
         }
 
-//        // Karten zählen
-//        cardStatus();
+        private void newRound() {
+            direction=true;
+            round++;
+            System.out.println("Runde: "+ round);
+            if (round>1){
+                currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
+                currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+                deck.createDrawPile();
+                deck.shuffle();
+                deck.dealCards(7);
+            }
+        }
+
+        // Karten zählen
+        cardStatus();
 
         // print handCards from currentPlayer
         output.print(currentPlayer.getName() + ": ");
@@ -228,7 +242,7 @@ public class UNOApp {
             try {
                 ArrayList<HashMap<String, String>> results = dbClient.executeQuery(String.format(SELECT_BYPLAYERANDSESSION, p.getName(), 1));
                 int points= Integer.parseInt(results.get(0).get("Score"));
-                output.println( p.getName() +": "+  points);
+                output.println( p.getName() +"Punkte: "+  points);
             } catch(SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -362,5 +376,6 @@ public class UNOApp {
         }
         return  sum;
     }
+
 }
 
