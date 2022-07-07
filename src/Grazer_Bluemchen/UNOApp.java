@@ -167,19 +167,6 @@ public class UNOApp {
             return;
         }
 
-        private void newRound() {
-            direction=true;
-            round++;
-            System.out.println("Runde: "+ round);
-            if (round>1){
-                currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
-                currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
-                deck.createDrawPile();
-                deck.shuffle();
-                deck.dealCards(7);
-            }
-        }
-
         // Karten zählen
         cardStatus();
 
@@ -189,7 +176,19 @@ public class UNOApp {
 
         // erste Karte wird aufgedeckt
         deck.printDiscardPile();
+    }
 
+    private void newRound() {
+        direction=true;
+        round++;
+        System.out.println("Runde: "+ round);
+        if (round>1){
+            currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
+            currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
+            deck.createDrawPile();
+            deck.shuffle();
+            deck.dealCards(7);
+        }
     }
 
     // aktuelle Punkte
