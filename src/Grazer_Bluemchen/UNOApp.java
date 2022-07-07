@@ -55,10 +55,12 @@ public class UNOApp {
         help.printHelp();
 
         // Anzahl Bots und Menschen erstellen?
+        //******************************************ANFORDERUNG 5 **************************************************
         createPlayer();
 
         // drawPile erstellen
         deck.createDrawPile();
+        //**************************************ANFORDERUNG 4 ***********************************************************
         deck.shuffle();
 
         // name eingeben
@@ -174,6 +176,7 @@ public class UNOApp {
 
     public void createPlayer() {
         while (allPlayers.allPlayer.size() < 4) {
+            //*********************************ANFORDERUNG2 ************************************
             output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
             int botCount = Integer.parseInt(input.nextLine());
             if (botCount >= 0 && botCount < 5) { // ACHTUNG 4 Bots möglich
@@ -188,7 +191,7 @@ public class UNOApp {
             }
         }
     }
-
+        //*********** ANFORDERUNG 1 UND 3  und 5*********************************************************
     public void namePlayers() {
         int botNumber = 1;
         for (Player p : allPlayers.allPlayer) {

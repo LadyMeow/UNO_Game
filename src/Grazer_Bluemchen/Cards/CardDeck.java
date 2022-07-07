@@ -46,7 +46,7 @@ public class CardDeck {
         discardpile.add(card);
     }
 
-    // shuffle method
+    // shuffle method ******************************ANFORDERUNG 4 ******************************************
     public void shuffle() {
         Collections.shuffle(drawpile);
     }
