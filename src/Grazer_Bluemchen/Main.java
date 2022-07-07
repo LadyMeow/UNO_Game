@@ -25,17 +25,6 @@ public class Main {
             }
             client.executeStatement(CREATETABLE);
 
-//            client.executeStatement(String.format(INSERT_TEMPLATE, "Anita", 1, 1, 50));
-//            client.executeStatement(String.format(INSERT_TEMPLATE, "Hans", 1, 1, 0));
-//            client.executeStatement(String.format(INSERT_TEMPLATE, "Anita", 1, 2, 20));
-//            client.executeStatement(String.format(INSERT_TEMPLATE, "Hans", 1, 2, 100));
-
-            //ArrayList<HashMap<String, String>> results = client.executeQuery(String.format(SELECT_BYPLAYERANDSESSION, "Anita", 1));
-
-//            for (HashMap<String, String> map : results) {
-//                System.out.println(map.get("Player") + " hat derzeit:  " + map.get("Score") + " Punkte");
-//            }
-
             Scanner input = new Scanner(System.in);
             UNOApp app = new UNOApp(input, System.out, client);
             app.Run();

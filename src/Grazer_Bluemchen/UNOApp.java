@@ -113,7 +113,7 @@ public class UNOApp {
         } else {
             output.println(currentPlayer + " hat Karte: " + playedCard + " gespielt.");
             // UNO prüfen
-            if (currentPlayer.handCards.size() == 1 && currentPlayer instanceof Human) { // Bots sagen immer automatisch UNO
+            if (currentPlayer.handCards.size() == 2 && currentPlayer instanceof Human) { // Bots sagen immer automatisch UNO
                 if (currentPlayer.isUno()) {
                     output.println(currentPlayer + " hat UNO gesagt!");
                     currentPlayer.setUno(false);
@@ -243,7 +243,12 @@ public class UNOApp {
         while (allPlayers.allPlayer.size() < 4) {
             //*********************************ANFORDERUNG2 ************************************
             output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
-            int botCount = Integer.parseInt(input.nextLine());
+            int botCount = 10;
+            try {
+                botCount = Integer.parseInt(input.nextLine());
+            } catch (NumberFormatException e) {
+                // ?
+            }
 
             if (botCount >= 0 && botCount < 4) {
                 for (int i = 0; i < 4 - botCount; i++) { // Humans erstellen
