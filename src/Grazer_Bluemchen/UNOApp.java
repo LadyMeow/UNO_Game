@@ -34,9 +34,9 @@ public class UNOApp {
     private SqliteClient dbClient;
     private static final String INSERT_TEMPLATE = "INSERT INTO Sessions (Player, Session, Round, Score) VALUES ('%1s', %2d, %3d, %4d);";
     private static final String SELECT_BYPLAYERANDSESSION = "SELECT Player, SUM(Score) AS Score FROM Sessions WHERE Player = '%1s' AND Session = %2d;";
-    public int round = 1;
-    public int session = 1;
-    public boolean newSession = true;
+    private int round = 1;
+    private int session = 1;
+    private boolean newSession = true;
 
     // constructor
     public UNOApp(Scanner input, PrintStream output, SqliteClient dbClient) {
