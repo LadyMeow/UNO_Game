@@ -51,7 +51,7 @@ public class UNOApp {
     public void Run() throws IOException {
         initialize();
         initializeDataBase();
-        printPoints();
+        //printPoints();
         printState();
 
         while (!exit) {
@@ -189,7 +189,7 @@ public class UNOApp {
             int points = Integer.parseInt(results.get(0).get("Score"));
             output.println(currentPlayer.getName() + "Punkte: " + points);
 
-            if (points >= 100) { // Spiel vorbei
+            if (points >= 500) { // Spiel vorbei
                 allPlayers.allPlayer.clear();
                 output.println("Neues Spiel? (J/N)");
                 session++;
