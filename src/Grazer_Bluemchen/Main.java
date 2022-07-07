@@ -4,11 +4,7 @@ import Grazer_Bluemchen.DB.SqliteClient;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
-
-import static Grazer_Bluemchen.DB.DBApp.*;
 
 public class Main {
 
