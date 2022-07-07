@@ -18,7 +18,7 @@ public class Human extends Player {
     @Override
     public Card searchHandCards(Card topCard) throws IOException {
         while (true) {
-            output.println("Spiele eine deiner Karten oder hebe eine Karte (mit k). Wenn du Hilfe brachst schreibe h: ");
+            output.println("Spiele eine deiner Karten oder hebe eine Karte (mit k). Wenn du Hilfe brachst schreibe h. Wenn du Punkte anzeigen willst, schreibe 'Punkte': ");
             String playCard = input.nextLine();
 
             if(playCard.equalsIgnoreCase("h")) {
