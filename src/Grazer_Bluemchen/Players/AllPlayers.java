@@ -3,23 +3,23 @@ package Grazer_Bluemchen.Players;
 import java.util.ArrayList;
 
 public class AllPlayers {
-    public ArrayList<Player> allPlayer;
+    public ArrayList<Player> playerList;
 
     public AllPlayers() {
-        allPlayer = new ArrayList<>();
+        playerList = new ArrayList<>();
     }
 
     public void addPlayer(Player p) {
-        allPlayer.add(p);
+        playerList.add(p);
     }
 
     public Player getPlayer(int index) {
-        return allPlayer.get(index);
+        return playerList.get(index);
     }
 
     public int countAllPlayerCards() {
         int sum = 0;
-        for (Player p : allPlayer) {
+        for (Player p : playerList) {
             sum += p.handCards.size();
         }
        return sum;
@@ -47,7 +47,7 @@ public class AllPlayers {
     @Override
     public String toString() {
         return "AllPlayers{" +
-                "allPlayer=" + allPlayer +
+                "allPlayer=" + playerList +
                 '}';
     }
 }

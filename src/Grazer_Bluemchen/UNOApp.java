@@ -190,14 +190,14 @@ public class UNOApp {
             output.println(currentPlayer.getName() + "Punkte: " + points);
 
             if (points >= 500) { // Spiel vorbei
-                allPlayers.allPlayer.clear();
+                allPlayers.playerList.clear();
                 output.println("Neues Spiel? (J/N)");
                 session++;
                 newSession = true;
                 round = 1;
             } else {
                 // Runde vorbei
-                for (Player p : allPlayers.allPlayer) {
+                for (Player p : allPlayers.playerList) {
                     p.handCards.clear();
                 }
                 output.println("Neue Runde? (J/N)");
@@ -229,7 +229,7 @@ public class UNOApp {
         deck.createDrawPile();
         deck.shuffle();
 
-        for (Player p : allPlayers.allPlayer) {
+        for (Player p : allPlayers.playerList) {
             p.handCards = deck.dealCards(2); // ACHTUNG!! nur 2 Karten
         }
 
@@ -240,7 +240,7 @@ public class UNOApp {
     // aktuelle Punkte
 
     public void createPlayer() {
-        while (allPlayers.allPlayer.size() < 4) {
+        while (allPlayers.playerList.size() < 4) {
             //*********************************ANFORDERUNG2 ************************************
             output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
             int botCount = 10;
@@ -266,7 +266,7 @@ public class UNOApp {
     //*********** ANFORDERUNG 1 UND 3  und 5*********************************************************
     public void namePlayers() {
         int botNumber = 1;
-        for (Player p : allPlayers.allPlayer) {
+        for (Player p : allPlayers.playerList) {
             if (p instanceof Human) {
                 output.println("Schreibe deinen Namen: ");
                 p.setName(input.nextLine());
@@ -282,7 +282,7 @@ public class UNOApp {
 
     private void initializeDataBase() {
         if (newSession) {
-            for (Player p : allPlayers.allPlayer) {
+            for (Player p : allPlayers.playerList) {
                 try {
                     dbClient.executeStatement(String.format(INSERT_TEMPLATE, p.getName(), session, round, 0)); // throws SQLException
                 } catch (SQLException e) {
@@ -294,7 +294,7 @@ public class UNOApp {
     }
 
     private void printPoints() {
-        for (Player p : allPlayers.allPlayer) {
+        for (Player p : allPlayers.playerList) {
             try {
                 ArrayList<HashMap<String, String>> results = dbClient.executeQuery(String.format(SELECT_BYPLAYERANDSESSION, p.getName(), session));
                 int points = Integer.parseInt(results.get(0).get("Score"));
@@ -419,7 +419,7 @@ public class UNOApp {
 
     private int countPoints() {
         int sum = 0;
-        for (Player p : allPlayers.allPlayer) {
+        for (Player p : allPlayers.playerList) {
             for (Card c : p.handCards) {
                 sum += c.getPoints();
             }
