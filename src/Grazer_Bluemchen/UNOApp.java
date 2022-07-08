@@ -300,7 +300,7 @@ public class UNOApp {
         }
     }
 
-    public void cardStatus() {
+    private void cardStatus() {
         System.out.println("Karten im Spiel: " + (deck.discardpile.size() + deck.drawpile.size() + allPlayers.countAllPlayerCards()));
         System.out.println("Discard Pile: " + deck.discardpile.size());
         System.out.println("Draw Pile: " + deck.drawpile.size());
@@ -311,7 +311,7 @@ public class UNOApp {
         System.out.println(allPlayers.getPlayer(3) + ": " + allPlayers.getPlayer(3).handCards.size());
     }
 
-    public void createDiscardPile() {
+    private void createDiscardPile() {
         // discardPile erstellen
         deck.addToDiscardPile();
         topCard = deck.discardpile.get(0);
@@ -337,7 +337,7 @@ public class UNOApp {
         }
     }
 
-    public CardType checkValidation() {
+    private CardType checkValidation() {
         CardType valid = null;
 
         if (playedCard != null) {
@@ -365,13 +365,13 @@ public class UNOApp {
         return valid;
     }
 
-    public void moveCards() {
+    private void moveCards() {
         currentPlayer.removeHandCard(playedCard); // remove from handCards
         deck.addCardToDiscard(playedCard); // add to discardpile
         topCard = playedCard; // topCard aktualisiert
     }
 
-    public void contestPlus4() {
+    private void contestPlus4() {
         int nextPlayerIndex = allPlayers.nextPlayer(direction, currentPlayerNumber) - 1;
         Player nextPlayer = allPlayers.getPlayer(nextPlayerIndex);
 
@@ -388,7 +388,7 @@ public class UNOApp {
     }
 
     // Spielen Methoden
-    public void humanPlays() {
+    private void humanPlays() {
         while (true) {
             String status = checkStatus(); // null - Karte abheben, String - playCard
 
@@ -409,7 +409,7 @@ public class UNOApp {
 
     }
 
-    public void botPlays() {
+    private void botPlays() {
         playedCard = currentPlayer.searchHandCards(topCard, null); // Bot spielt eine Karte (wenn sie passt)
         if (playedCard == null) {
             currentPlayer.handCards.addAll(deck.dealCards(1)); // Bot hebt 1 card ab
