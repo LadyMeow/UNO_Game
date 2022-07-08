@@ -438,26 +438,17 @@ public class UNOApp {
 
             if (playCard.equalsIgnoreCase("Punkte")) {
                 printPoints();
-            }
-
-            if (playCard.equalsIgnoreCase("h")) {
+            } else if (playCard.equalsIgnoreCase("h")) {
                 help.printHelp();
-            }
-
-            if (playCard.toLowerCase().contains("uno")) {
+            } else if (playCard.toLowerCase().contains("uno")) {
                 currentPlayer.setUno(true);
                 playCard = playCard.replace("uno", "").trim();
                 if (!playCard.equalsIgnoreCase("")) {
                     return playCard;
                 }
-            }
-
-            // abheben & Karte Spielen noch möglich!
-            if (playCard.equalsIgnoreCase("k")) {
+            } else if (playCard.equalsIgnoreCase("k")) { // abheben & Karte Spielen noch möglich!
                 return null;
-            }
-
-            if (!playCard.equals("")) { // normale Karte spielen
+            } else if (!playCard.equals("")) { // normale Karte spielen
                 return playCard;
             }
         }
