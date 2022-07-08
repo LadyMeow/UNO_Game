@@ -23,6 +23,8 @@ public abstract class Player {
     }
 
     public void printHandCards() {
+        output.print(name + ": ");
+
         for (Card c : handCards) {
             System.out.print(c.getName() + " ");
         }

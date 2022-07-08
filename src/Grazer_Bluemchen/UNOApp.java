@@ -50,7 +50,6 @@ public class UNOApp {
     public void Run() {
         initialize();
         initializeDataBase();
-        //printPoints();
         printState();
 
         while (!exit) {
@@ -207,11 +206,12 @@ public class UNOApp {
         }
 
         // Karten zählen
-        cardStatus();
+        // cardStatus();
 
-        // print handCards from currentPlayer
-        output.print(currentPlayer.getName() + ": ");
-        currentPlayer.printHandCards(); // Methode anpassen, dass currentPlayer mit ausgegeben wird
+        // print handCards from Human
+        if(currentPlayer instanceof Human) {
+            currentPlayer.printHandCards();
+        }
 
         // erste Karte wird aufgedeckt
         deck.printDiscardPile();
@@ -227,14 +227,12 @@ public class UNOApp {
         deck.shuffle();
 
         for (Player p : allPlayers.playerList) {
-            p.handCards = deck.dealCards(2); // ACHTUNG!! nur 2 Karten
+            p.handCards = deck.dealCards(7);
         }
 
         createDiscardPile();
 
     }
-
-    // aktuelle Punkte
 
     public void createPlayer() {
         while (allPlayers.playerList.size() < 4) {
@@ -267,7 +265,7 @@ public class UNOApp {
             if (p instanceof Human) {
                 output.println("Schreibe deinen Namen: ");
                 p.setName(input.nextLine());
-                p.handCards = deck.dealCards(2);
+                p.handCards = deck.dealCards(7);
             } else {
                 p.setName("Bot" + botNumber);
                 botNumber++;
@@ -333,7 +331,6 @@ public class UNOApp {
             output.println("Richtungswechsel!");
         } else if (topCard.getName().equals("ColorChange")) {
             deck.printDiscardPile();
-            output.print(currentPlayer.getName() + ": ");
             currentPlayer.printHandCards();
             colorWish = currentPlayer.chooseColor();
             topCard.setColor(colorWish);
@@ -398,7 +395,6 @@ public class UNOApp {
             if (status == null) {
                 currentPlayer.handCards.addAll(deck.dealCards(1));
                 // print handcards
-                System.out.print(currentPlayer.getName() + ": ");
                 currentPlayer.printHandCards();
 
                 playedCard = currentPlayer.playIfPossible(topCard);
