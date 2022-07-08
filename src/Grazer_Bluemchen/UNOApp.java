@@ -388,25 +388,26 @@ public class UNOApp {
     }
 
     // Spielen Methoden
+
     private void humanPlays() {
         while (true) {
-            String status = checkStatus(); // null - Karte abheben, String - playCard
+            String status = checkStatus();
+            // Spieler wählt Karte, Eingabe k: abheben, Eingabe w: weiter, Eingabe Punkte: Punktestand aller Spieler
 
             if (status == null) {
                 currentPlayer.handCards.addAll(deck.dealCards(1));
-                // print handcards
+
                 currentPlayer.printHandCards();
 
                 playedCard = currentPlayer.playIfPossible(topCard);
                 return;
             } else {
-                playedCard = currentPlayer.searchHandCards(topCard, status); // Spieler wählt Karte, Eingabe k: abheben, Eingabe w: weiter
+                playedCard = currentPlayer.searchHandCards(topCard, status);
                 if (playedCard != null) {
                     return;
                 }
             }
         }
-
     }
 
     private void botPlays() {
