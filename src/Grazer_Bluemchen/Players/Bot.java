@@ -13,7 +13,7 @@ public class Bot extends Player {
     }
 
     @Override
-    public Card searchHandCards(Card topCard) {
+    public Card searchHandCards(Card topCard, String playCard) {
 
         for (Card c : handCards) { // evtl. noch action Cards hinzufügen?
             if (topCard.getColor() == c.getColor()) {

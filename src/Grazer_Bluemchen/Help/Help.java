@@ -4,20 +4,29 @@ import java.io.*;
 
 public class Help {
 
-    public void printHelp() throws IOException {
+    public void printHelp() {
         File file = new File("help.txt");
-        FileReader fileReader = new FileReader(file);
+        BufferedReader bufferedReader = null;
 
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        try {
+            FileReader fileReader = new FileReader(file);
+            bufferedReader = new BufferedReader(fileReader);
 
-        // zeilenweise auslesen
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            System.out.println(line);
+            // zeilenweise auslesen
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Fehler");
+        } finally {
+            try {
+                assert bufferedReader != null;
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        bufferedReader.close();
     }
-
 
 }

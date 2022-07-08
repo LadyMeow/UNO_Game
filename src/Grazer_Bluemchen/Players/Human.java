@@ -1,6 +1,7 @@
 package Grazer_Bluemchen.Players;
 
 import Grazer_Bluemchen.Cards.Card;
+import Grazer_Bluemchen.Cards.CardDeck;
 import Grazer_Bluemchen.Cards.Colors;
 import Grazer_Bluemchen.Help.Help;
 
@@ -16,32 +17,14 @@ public class Human extends Player {
     }
 
     @Override
-    public Card searchHandCards(Card topCard) throws IOException {
-        while (true) {
-            output.println("Spiele eine deiner Karten oder hebe eine Karte (mit k). Wenn du Hilfe brachst schreibe h. Wenn du Punkte anzeigen willst, schreibe 'Punkte': ");
-            String playCard = input.nextLine();
-
-            if(playCard.equalsIgnoreCase("h")) {
-                help.printHelp();
+    public Card searchHandCards(Card topCard, String playCard) {
+        for (Card hc : handCards) {
+            if (hc.getName().equalsIgnoreCase(playCard)) {
+                return hc;
             }
-
-            if (playCard.toLowerCase().contains("uno")) {
-                setUno(true);
-                playCard = playCard.replace("uno", "").trim();
-            }
-
-            // abheben & Karte Spielen noch möglich!
-            if (playCard.equalsIgnoreCase("k")) {
-                return null;
-            }
-
-            for (Card hc : handCards) {
-                if (hc.getName().equalsIgnoreCase(playCard)) {
-                    return hc;
-                }
-            }
-            output.println("Du hast diese Karte nicht auf der Hand! Spiele eine andere Karte!");
         }
+        output.println("Du hast diese Karte nicht auf der Hand! Spiele eine andere Karte!");
+        return null;
     }
 
     @Override
@@ -60,12 +43,9 @@ public class Human extends Player {
                 return null;
             }
 
-            for (Card hc : handCards) {
-                if (hc.getName().equalsIgnoreCase(playCard)) {
-                    return hc;
-                }
+            if (searchHandCards(topCard, playCard) != null) {
+                return searchHandCards(topCard, playCard);
             }
-            System.out.println("Du hast diese Karte nicht auf der Hand! Spiele eine andere Karte!");
         }
     }
 
@@ -105,7 +85,7 @@ public class Human extends Player {
             if (checkContest(topCard)) {
                 output.println(getName() + " hat geschummelt und bekommt 4 Strafkarten!");
                 return 1;
-            } else if(!checkContest(topCard)) {
+            } else if (!checkContest(topCard)) {
                 output.println(getName() + " hat NICHT geschummelt! Du bekommst jetzt 6 Strafkarten.");
                 return 2;
             }

@@ -40,7 +40,7 @@ public abstract class Player {
     }
 
     // searchCards (only Bot)
-    public abstract Card searchHandCards(Card topCard) throws IOException;
+    public abstract Card searchHandCards(Card topCard, String playCard);
 
     // play Card if possible
     public abstract Card playIfPossible(Card topCard);

@@ -48,7 +48,7 @@ public class UNOApp {
     }
 
     // GameLoop
-    public void Run() throws IOException {
+    public void Run() {
         initialize();
         initializeDataBase();
         //printPoints();
@@ -61,7 +61,7 @@ public class UNOApp {
         }
     }
 
-    private void initialize() throws IOException {
+    private void initialize() {
         // Neue Runde
         exit = false;
 
@@ -93,11 +93,10 @@ public class UNOApp {
         }
     }
 
-    private void inputPlayer() throws IOException {
+    private void inputPlayer() {
         if (currentPlayer instanceof Bot) {
             botPlays();
         } else {
-            playedCard = currentPlayer.searchHandCards(topCard); // Spieler wählt Karte, Eingabe k: abheben, Eingabe w: weiter
             humanPlays();
         }
     }
@@ -140,6 +139,7 @@ public class UNOApp {
             round++;
             int points = countPoints();
             output.println((currentPlayer + " du hast: " + points + " Punkte bekommen! "));
+            printPoints();
             try {
                 dbClient.executeStatement(String.format(INSERT_TEMPLATE, currentPlayer.getName(), session, round, points)); // throws SQLException
             } catch (SQLException e) {
@@ -298,7 +298,7 @@ public class UNOApp {
             try {
                 ArrayList<HashMap<String, String>> results = dbClient.executeQuery(String.format(SELECT_BYPLAYERANDSESSION, p.getName(), session));
                 int points = Integer.parseInt(results.get(0).get("Score"));
-                output.println(p.getName() + "Punkte: " + points);
+                output.println(p.getName() + " - Punkte: " + points);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -395,18 +395,29 @@ public class UNOApp {
 
     // Spielen Methoden
     public void humanPlays() {
-        if (playedCard == null) {
-            currentPlayer.handCards.addAll(deck.dealCards(1));
-            // print handcards
-            System.out.print(currentPlayer.getName() + ": ");
-            currentPlayer.printHandCards();
+        while (true) {
+            String status = checkStatus(); // null - Karte abheben, String - playCard
 
-            playedCard = currentPlayer.playIfPossible(topCard);
+            if (status == null) {
+                currentPlayer.handCards.addAll(deck.dealCards(1));
+                // print handcards
+                System.out.print(currentPlayer.getName() + ": ");
+                currentPlayer.printHandCards();
+
+                playedCard = currentPlayer.playIfPossible(topCard);
+                return;
+            } else {
+                playedCard = currentPlayer.searchHandCards(topCard, status); // Spieler wählt Karte, Eingabe k: abheben, Eingabe w: weiter
+                if (playedCard != null) {
+                    return;
+                }
+            }
         }
+
     }
 
-    public void botPlays() throws IOException {
-        playedCard = currentPlayer.searchHandCards(topCard); // Bot spielt eine Karte (wenn sie passt)
+    public void botPlays() {
+        playedCard = currentPlayer.searchHandCards(topCard, null); // Bot spielt eine Karte (wenn sie passt)
         if (playedCard == null) {
             currentPlayer.handCards.addAll(deck.dealCards(1)); // Bot hebt 1 card ab
             if (currentPlayer.playIfPossible(topCard) != null && (currentPlayer.handCards.size() == 2)) { // Bot spielt, wenn möglich, die abgehobene Karte
@@ -425,6 +436,38 @@ public class UNOApp {
             }
         }
         return sum;
+    }
+
+    private String checkStatus() { // gibt String für Karte die wir spielen wollen zurück
+        while (true) {
+            output.println("Spiele eine deiner Karten oder hebe eine Karte (mit k). Wenn du Hilfe brachst schreibe h. Wenn du Punkte anzeigen willst, schreibe 'Punkte': ");
+            String playCard = input.nextLine();
+
+            if (playCard.equalsIgnoreCase("Punkte")) {
+                printPoints();
+            }
+
+            if (playCard.equalsIgnoreCase("h")) {
+                help.printHelp();
+            }
+
+            if (playCard.toLowerCase().contains("uno")) {
+                currentPlayer.setUno(true);
+                playCard = playCard.replace("uno", "").trim();
+                if (!playCard.equalsIgnoreCase("")) {
+                    return playCard;
+                }
+            }
+
+            // abheben & Karte Spielen noch möglich!
+            if (playCard.equalsIgnoreCase("k")) {
+                return null;
+            }
+
+            if (!playCard.equals("")) { // normale Karte spielen
+                return playCard;
+            }
+        }
     }
 
 }
