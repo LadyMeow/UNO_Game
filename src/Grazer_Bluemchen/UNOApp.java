@@ -11,7 +11,6 @@ import Grazer_Bluemchen.Players.Bot;
 import Grazer_Bluemchen.Players.Human;
 import Grazer_Bluemchen.Players.Player;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -169,8 +168,6 @@ public class UNOApp {
         currentPlayerNumber = allPlayers.nextPlayer(direction, currentPlayerNumber);
         currentPlayer = allPlayers.getPlayer(currentPlayerNumber - 1);
 
-//    // nachzählen, ob gesamt 108 Karten sind!
-//        System.out.println("Karten im Spiel: "+(deck.discardpile.size()+deck.drawpile.size()+allPlayers.countAllPlayerCards()));
     }
 
     private void printState() {
