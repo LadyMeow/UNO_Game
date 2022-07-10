@@ -106,7 +106,7 @@ public class UNOApp {
 
         // Textausgabe und UNO prüfen
         if (playedCard == null) {
-            output.println("Du hast keine Karte gespielt, der Nächste ist dran!");
+            output.println(currentPlayer + " hat keine Karte gespielt, der Nächste ist dran!");
         } else {
             output.println(currentPlayer + " hat Karte: " + playedCard + " gespielt.");
             // UNO prüfen
