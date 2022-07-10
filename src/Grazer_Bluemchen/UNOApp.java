@@ -265,7 +265,7 @@ public class UNOApp {
             if (p instanceof Human) {
                 output.println("Schreibe deinen Namen: ");
                 p.setName(input.nextLine());
-                p.handCards = deck.dealCards(2); // ACHTUNG!!
+                p.handCards = deck.dealCards(7);
             } else {
                 p.setName("Bot" + botNumber);
                 botNumber++;
