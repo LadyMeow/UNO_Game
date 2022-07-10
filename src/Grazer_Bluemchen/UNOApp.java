@@ -191,6 +191,7 @@ public class UNOApp {
                 session++;
                 newSession = true;
                 round = 1;
+                currentPlayerNumber = (int) (Math.random() * (4 - 1)) + 1;
             } else {
                 // Runde vorbei
                 for (Player p : allPlayers.playerList) {
@@ -201,7 +202,6 @@ public class UNOApp {
             // Spiel vorbei + Runde vorbei
             deck.drawpile.clear();
             deck.discardpile.clear();
-            currentPlayerNumber = (int) (Math.random() * (4 - 1)) + 1;
             return;
         }
 
@@ -238,7 +238,7 @@ public class UNOApp {
         while (allPlayers.playerList.size() < 4) {
             //*********************************ANFORDERUNG2 ************************************
             output.println("Mit wie vielen Bots möchtest du spielen? (0-3)");
-            int botCount = 10;
+            int botCount = -1;
             try {
                 botCount = Integer.parseInt(input.nextLine());
             } catch (NumberFormatException e) {
@@ -265,7 +265,7 @@ public class UNOApp {
             if (p instanceof Human) {
                 output.println("Schreibe deinen Namen: ");
                 p.setName(input.nextLine());
-                p.handCards = deck.dealCards(7);
+                p.handCards = deck.dealCards(2); // ACHTUNG!!
             } else {
                 p.setName("Bot" + botNumber);
                 botNumber++;
